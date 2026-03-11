@@ -25,12 +25,25 @@ def mock_db_env():
 
 @pytest.fixture
 def database_module(mock_db_env):
+    # Clear settings cache so database module picks up current env vars.
     get_settings.cache_clear()
     import vetlog_buddy.shared.database as database
 
+    # Clear any previous lru_cache state before reloading the module.
+    if hasattr(database, "get_database_url"):
+        database.get_database_url.cache_clear()
+    if hasattr(database, "get_engine"):
+        database.get_engine.cache_clear()
+
     database = importlib.reload(database)
     yield database
+
+    # Avoid cache leakage across tests.
     get_settings.cache_clear()
+    if hasattr(database, "get_database_url"):
+        database.get_database_url.cache_clear()
+    if hasattr(database, "get_engine"):
+        database.get_engine.cache_clear()
 
 
 def test_database_file_exists():
