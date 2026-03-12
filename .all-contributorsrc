@@ -64,6 +64,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "zamadye",
+      "name": "Kahfi Elhady",
+      "avatar_url": "https://avatars.githubusercontent.com/u/113518657?v=4",
+      "profile": "https://github.com/yastrid90",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
