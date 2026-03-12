@@ -1,4 +1,4 @@
-#  Copyright 2025 Jose Morales contact@josdem.io
+#  Copyright 2026 Jose Morales contact@josdem.io
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  You may obtain a copy of the License at
