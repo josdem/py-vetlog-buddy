@@ -1,7 +1,7 @@
 # 🐍 Vetlog Buddy
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Setup
@@ -102,6 +102,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="http://bento.me/adityashirsatrao007"><img src="https://avatars.githubusercontent.com/u/137131673?v=4?s=100" width="100px;" alt="Aditya"/><br /><sub><b>Aditya</b></sub></a><br /><a href="https://github.com/josdem/py-vetlog-buddy/commits?author=adityashirsatrao007" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://mohammed-saleh-ishaq.github.io/MyPortfolio/"><img src="https://avatars.githubusercontent.com/u/117186633?v=4?s=100" width="100px;" alt="Mohammed Saleh Ishaq"/><br /><sub><b>Mohammed Saleh Ishaq</b></sub></a><br /><a href="https://github.com/josdem/py-vetlog-buddy/commits?author=Mohammed-Saleh-Ishaq" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Zhey-on"><img src="https://avatars.githubusercontent.com/u/110686204?v=4?s=100" width="100px;" alt="Zheyon"/><br /><sub><b>Zheyon</b></sub></a><br /><a href="https://github.com/josdem/py-vetlog-buddy/commits?author=Zhey-on" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/yastrid90"><img src="https://avatars.githubusercontent.com/u/113518657?v=4?s=100" width="100px;" alt="Kahfi Elhady"/><br /><sub><b>Kahfi Elhady</b></sub></a><br /><a href="https://github.com/josdem/py-vetlog-buddy/commits?author=zamadye" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
