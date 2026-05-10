@@ -30,7 +30,7 @@ def test_find_pending_dewormings():
         id=1,
         pet_id=1,
         name="Deworming",
-        date=datetime.now() - timedelta(days=30 * 7),
+        date=datetime.now() - timedelta(days=30 * 14),  # 14 months ago
         status="APPLIED",
     )
     session.exec.return_value.all.return_value = [vaccination]
