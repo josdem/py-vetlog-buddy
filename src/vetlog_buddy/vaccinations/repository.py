@@ -12,10 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License
 
-from datetime import datetime
-from sqlmodel import Session
 
-from vetlog_buddy.vaccinations.model import Vaccination
+from typing import Sequence
+from datetime import datetime, timedelta
+from sqlmodel import Session, select
+
+from vetlog_buddy.vaccinations.model import Vaccination, VaccineType
 
 
 class VaccinationRepository:
@@ -30,3 +32,11 @@ class VaccinationRepository:
         self.session.commit()
         self.session.refresh(vaccination)
         return vaccination
+
+    def find_pending_dewormings(self) -> Sequence[Vaccination]:
+        stmt = select(Vaccination).where(
+            (Vaccination.status == "APPLIED")
+            & (Vaccination.name == VaccineType.DEWORMING)
+            & (Vaccination.date <= datetime.now() - timedelta(days=30 * 12))
+        )
+        return self.session.exec(stmt).all()
