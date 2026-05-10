@@ -26,7 +26,7 @@ class VaccinationRepository:
 
     def create(self, pet_id: int, vaccine_name: str) -> Vaccination:
         vaccination = Vaccination(
-            pet_id=pet_id, name=vaccine_name, date=datetime.now(), status="PENDING"
+            pet_id=pet_id, name=vaccine_name, date=datetime.now(), status="NEW"
         )
         self.session.add(vaccination)
         self.session.commit()

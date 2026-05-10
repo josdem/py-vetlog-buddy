@@ -33,7 +33,7 @@ def test_get_dewormings(mock_repo):
         Vaccination(
             id=1,
             name="Deworming",
-            date=datetime(2026, 4, 21),
+            date=datetime(2025, 4, 21),
             pet_id=2,
             status="APPLIED",
         )

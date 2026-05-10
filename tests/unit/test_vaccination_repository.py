@@ -60,3 +60,21 @@ def test_find_pending_dewormings():
     assert len(pending_dewormings) == 1
     assert pending_dewormings[0].id == vaccination.id
     assert pending_dewormings[0].status == "APPLIED"
+
+
+def test_create_deworming():
+    session = MagicMock(spec=Session)
+    repository = VaccinationRepository(session)
+
+    pet_id = 1
+    vaccine_name = "Deworming"
+    repository.create(pet_id, vaccine_name)
+
+    session.add.assert_called_once()
+    session.commit.assert_called_once()
+    session.refresh.assert_called_once()
+
+    added_vaccination = session.add.call_args.args[0]
+    assert added_vaccination.pet_id == pet_id
+    assert added_vaccination.name == vaccine_name
+    assert added_vaccination.status == "NEW"
