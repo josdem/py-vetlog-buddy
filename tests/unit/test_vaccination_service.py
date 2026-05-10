@@ -26,7 +26,7 @@ def mock_repo():
     return MagicMock()
 
 
-def test_get_dewormings(mock_repo):
+def test_get_pending_dewormings(mock_repo):
     """Get pending dewormings"""
     service = VaccinationService(repository=mock_repo)
     dewormings = [
