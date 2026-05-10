@@ -15,7 +15,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from vetlog_buddy.vaccinations.models import VaccineType
+from vetlog_buddy.vaccinations.model import VaccineType
 
 
 class VaccinationStrategy(ABC):

@@ -15,7 +15,7 @@
 from datetime import datetime
 from sqlmodel import Session
 
-from vetlog_buddy.vaccinations.models import Vaccination
+from vetlog_buddy.vaccinations.model import Vaccination
 
 
 class VaccinationRepository:

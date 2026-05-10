@@ -2,7 +2,7 @@ from collections.abc import Sequence
 
 from sqlmodel import Session, select
 
-from vetlog_buddy.users.models import User
+from vetlog_buddy.users.model import User
 
 
 class UserRepository:

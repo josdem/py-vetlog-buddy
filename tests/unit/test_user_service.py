@@ -1,6 +1,6 @@
 import pytest
 
-from vetlog_buddy.users.models import User
+from vetlog_buddy.users.model import User
 from vetlog_buddy.users.repository import UserRepository
 from vetlog_buddy.users.services import UserService
 

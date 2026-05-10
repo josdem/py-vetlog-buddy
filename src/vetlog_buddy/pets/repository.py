@@ -15,7 +15,7 @@
 from typing import List, Tuple
 from sqlmodel import Session, select, text
 
-from vetlog_buddy.pets.models import Pet, Breed
+from vetlog_buddy.pets.model import Pet, Breed
 
 
 class PetRepository:
