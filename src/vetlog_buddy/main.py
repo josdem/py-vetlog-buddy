@@ -55,6 +55,7 @@ def dewormings():
         vacc_service = VaccinationService(vacc_repo)
         pet_service = PetService(pet_repo, vacc_service)
         required_dewormings = vacc_service.get_pending_dewormings()
+        print(f"Found {len(required_dewormings)} pending dewormings")
         for deworming in required_dewormings:
             pet = pet_service.get_pet_by_id(deworming.pet_id)
             print(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
