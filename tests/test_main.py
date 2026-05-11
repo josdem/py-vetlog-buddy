@@ -1,4 +1,4 @@
-from vetlog_buddy.main import dewormings
+from vetlog_buddy import main
 from unittest.mock import MagicMock, patch
 
 
@@ -28,7 +28,7 @@ def test_pending_dewormings():
             name=f"Pet{pet_id}", id=pet_id
         )
 
-        dewormings()
+        main.dewormings()
 
         # Assertions to ensure the correct calls were made
         mock_vacc_service.get_pending_dewormings.assert_called_once()
