@@ -73,6 +73,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "suiiibhit",
+      "name": "suiiibhit",
+      "avatar_url": "https://avatars.githubusercontent.com/u/157471408?v=4",
+      "profile": "https://github.com/suiiibhit",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
