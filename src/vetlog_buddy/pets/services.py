@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License
 
+from vetlog_buddy.pets.model import Pet
 from vetlog_buddy.pets.repository import PetRepository
 from vetlog_buddy.shared.logger import Logger
 from vetlog_buddy.vaccinations.services import VaccinationService
@@ -66,3 +67,7 @@ class PetService:
             "Pets waiting for vaccines found: %s", len(pets_waiting_for_vaccines)
         )
         return pets_waiting_for_vaccines
+
+    def get_by_id(self, id: int) -> Pet | None:
+        """Return pet by id"""
+        return self.repository.find_by_id(id)
