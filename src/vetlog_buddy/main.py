@@ -19,6 +19,8 @@ from vetlog_buddy.pets.repository import PetRepository
 from vetlog_buddy.pets.services import PetService
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
 from vetlog_buddy.vaccinations.services import VaccinationService
+from vetlog_buddy.dewormings.repository import DewormingRepository
+from vetlog_buddy.dewormings.services import DewormingService
 
 from . import __project__, __version__
 
@@ -46,6 +48,16 @@ def vaccines():
         vacc_service = VaccinationService(vacc_repo)
         pet_service = PetService(pet_repo, vacc_service)
         pet_service.process_vaccinations()
+
+
+def dewormings():
+    """List pets waiting for deworming and create records."""
+    with get_session() as session:
+        pet_repo = PetRepository(session)
+        deworm_repo = DewormingRepository(session)
+        deworm_service = DewormingService(deworm_repo)
+        pet_service = PetService(pet_repo, deworm_service=deworm_service)
+        pet_service.process_dewormings()
 
 
 def version_check():

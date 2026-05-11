@@ -15,14 +15,19 @@
 from vetlog_buddy.pets.repository import PetRepository
 from vetlog_buddy.shared.logger import Logger
 from vetlog_buddy.vaccinations.services import VaccinationService
+from typing import Optional
 
 
 class PetService:
     def __init__(
-        self, repository: PetRepository, vaccination_service: VaccinationService
+        self,
+        repository: PetRepository,
+        vaccination_service: Optional[VaccinationService] = None,
+        deworm_service=None,
     ):
         self.repository = repository
         self.vaccination_service = vaccination_service
+        self.deworm_service = deworm_service
         self.logger = Logger("PetService")
 
     def process_vaccinations(self):
@@ -66,3 +71,34 @@ class PetService:
             "Pets waiting for vaccines found: %s", len(pets_waiting_for_vaccines)
         )
         return pets_waiting_for_vaccines
+
+    def process_dewormings(self):
+        """
+        Processes all pets that need deworming by creating pending deworming records.
+
+        This method:
+          - Retrieves all pets with pending deworming (to avoid duplicates).
+          - Retrieves all pets needing deworming (last deworming >= 1 year ago or none).
+          - Creates a pending deworming record for each.
+
+        Returns:
+            list: A list of pets (tuples) that were found waiting for deworming.
+        """
+        # Get pets that already have pending deworming (to skip)
+        pets_with_pending = self.repository.get_pets_with_pending_deworming()
+        self.logger.info("Pets with pending deworming: %s", len(pets_with_pending))
+
+        # Get pets that need deworming
+        pets_needing_deworming = self.repository.get_pets_needing_deworming()
+        self.logger.info("Pets needing deworming found: %s", len(pets_needing_deworming))
+
+        if not self.deworm_service:
+            self.logger.info("No deworming service configured")
+            return pets_needing_deworming
+
+        for row in pets_needing_deworming:
+            pet_id = row[0]
+            name = row[1]
+            self.deworm_service.deworm_pet(pet_id, name)
+
+        return pets_needing_deworming
