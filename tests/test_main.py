@@ -7,9 +7,9 @@ def test_pending_dewormings():
     mock_session_cm = MagicMock()
 
     with (
-        patch("vetlog_calendar.main.get_session", return_value=mock_session_cm),
-        patch("vetlog_calendar.main.VaccinationService") as MockVaccService,
-        patch("vetlog_calendar.main.PetService") as MockPetService,
+        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccService,
+        patch("vetlog_buddy.main.PetService") as MockPetService,
     ):
         mock_session = MagicMock()
         mock_session_cm.__enter__.return_value = mock_session
