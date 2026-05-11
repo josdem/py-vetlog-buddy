@@ -48,6 +48,18 @@ def vaccines():
         pet_service.process_vaccinations()
 
 
+def dewormings():
+    with get_session() as session:
+        pet_repo = PetRepository(session)
+        vacc_repo = VaccinationRepository(session)
+        vacc_service = VaccinationService(vacc_repo)
+        pet_service = PetService(pet_repo, vacc_service)
+        required_dewormings = vacc_service.get_pending_dewormings()
+        for deworming in required_dewormings:
+            pet = pet_service.get_pet_by_id(deworming.pet_id)
+            print(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
+
+
 def version_check():
     """Print version info"""
     print(f"{__project__} version {__version__}")
