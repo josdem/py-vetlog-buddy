@@ -13,6 +13,7 @@
 #  limitations under the License
 
 from datetime import datetime
+from vetlog_buddy.pets.model import Pet
 from vetlog_buddy.shared.logger import Logger
 from vetlog_buddy.vaccinations.model import VaccineType
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
@@ -21,6 +22,8 @@ from vetlog_buddy.vaccinations.strategies import (
     DogVaccinationStrategy,
     VaccinationStrategy,
 )
+
+EXCLUDED_STATUSES = frozenset({"INACTIVE", "DECEASED"})
 
 
 class VaccinationService:
@@ -58,6 +61,7 @@ class VaccinationService:
         """Return pending dewormings"""
         return self.repository.find_pending_dewormings()
 
-    def create_deworming(self, pet_id: int):
+    def create_deworming(self, pet: Pet):
         """Create a deworming record for a pet"""
-        self.repository.create(pet_id, VaccineType.DEWORMING)
+        if pet.status not in EXCLUDED_STATUSES:
+            self.repository.create(pet.id, VaccineType.DEWORMING)

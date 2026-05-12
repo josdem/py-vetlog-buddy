@@ -17,6 +17,7 @@ import pytest
 from datetime import datetime
 from unittest.mock import MagicMock
 
+from vetlog_buddy.pets.model import Pet
 from vetlog_buddy.vaccinations.model import Vaccination
 from vetlog_buddy.vaccinations.services import VaccinationService
 
@@ -46,6 +47,40 @@ def test_get_pending_dewormings(mock_repo):
 def test_create_deworming(mock_repo):
     """Create a deworming record for a pet"""
     service = VaccinationService(repository=mock_repo)
-    pet_id = 2
-    service.create_deworming(pet_id)
-    mock_repo.create.assert_called_once_with(pet_id, "Deworming")
+    pet = Pet(
+        id=2,
+        name="Buddy",
+        birth_date=datetime(2020, 1, 1),
+        pet_type="DOG",
+        status="ACTIVE",
+    )
+    service.create_deworming(pet)
+    mock_repo.create.assert_called_once_with(pet.id, "Deworming")
+
+
+def test_should_not_create_deworming_for_inactive_pet(mock_repo):
+    """Do not create a deworming record for an inactive pet"""
+    service = VaccinationService(repository=mock_repo)
+    pet = Pet(
+        id=3,
+        name="Whiskers",
+        birth_date=datetime(2019, 6, 1),
+        pet_type="CAT",
+        status="INACTIVE",
+    )
+    service.create_deworming(pet)
+    mock_repo.create.assert_not_called()
+
+
+def test_should_not_create_deworming_for_deceased_pet(mock_repo):
+    """Do not create a deworming record for a deceased pet"""
+    service = VaccinationService(repository=mock_repo)
+    pet = Pet(
+        id=4,
+        name="Shadow",
+        birth_date=datetime(2018, 3, 15),
+        pet_type="DOG",
+        status="DECEASED",
+    )
+    service.create_deworming(pet)
+    mock_repo.create.assert_not_called()
