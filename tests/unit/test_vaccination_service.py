@@ -51,7 +51,6 @@ def test_create_deworming(mock_repo):
         id=2,
         name="Buddy",
         birth_date=datetime(2020, 1, 1),
-        pet_type="DOG",
         status="ACTIVE",
     )
     service.create_deworming(pet)
@@ -65,7 +64,6 @@ def test_should_not_create_deworming_for_inactive_pet(mock_repo):
         id=3,
         name="Whiskers",
         birth_date=datetime(2019, 6, 1),
-        pet_type="CAT",
         status="INACTIVE",
     )
     service.create_deworming(pet)
@@ -79,7 +77,6 @@ def test_should_not_create_deworming_for_deceased_pet(mock_repo):
         id=4,
         name="Shadow",
         birth_date=datetime(2018, 3, 15),
-        pet_type="DOG",
         status="DECEASED",
     )
     service.create_deworming(pet)
