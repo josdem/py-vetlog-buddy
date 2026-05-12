@@ -82,6 +82,15 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "sypham98-prog",
+      "name": "Sy Pham",
+      "avatar_url": "https://avatars.githubusercontent.com/u/246709336?v=4",
+      "profile": "https://github.com/sypham98-prog",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
