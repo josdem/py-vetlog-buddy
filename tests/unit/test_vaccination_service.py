@@ -41,3 +41,11 @@ def test_get_pending_dewormings(mock_repo):
     mock_repo.find_pending_dewormings.return_value = dewormings
     assert service.get_pending_dewormings() == dewormings
     mock_repo.find_pending_dewormings.assert_called_once_with()
+
+
+def test_create_deworming(mock_repo):
+    """Create a deworming record for a pet"""
+    service = VaccinationService(repository=mock_repo)
+    pet_id = 2
+    service.create_deworming(pet_id)
+    mock_repo.create.assert_called_once_with(pet_id, "Deworming")

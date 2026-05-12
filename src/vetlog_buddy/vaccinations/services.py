@@ -14,6 +14,7 @@
 
 from datetime import datetime
 from vetlog_buddy.shared.logger import Logger
+from vetlog_buddy.vaccinations.model import VaccineType
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
 from vetlog_buddy.vaccinations.strategies import (
     CatVaccinationStrategy,
@@ -56,3 +57,7 @@ class VaccinationService:
     def get_pending_dewormings(self):
         """Return pending dewormings"""
         return self.repository.find_pending_dewormings()
+
+    def create_deworming(self, pet_id: int):
+        """Create a deworming record for a pet"""
+        self.repository.create(pet_id, VaccineType.DEWORMING)
