@@ -42,3 +42,6 @@ class PetRepository:
         # However, Pet.breed_id is int, Breed.id is int. join matches foreign key.
         # But previous code used Implicit Join (comma separated). Explicit JOIN is better.
         return self.session.exec(stmt).all()
+
+    def find_by_id(self, id: int) -> Pet | None:
+        return self.session.exec(select(Pet).where(Pet.id == id)).one_or_none()
