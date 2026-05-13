@@ -14,6 +14,7 @@
 
 from datetime import datetime
 from typing import Optional
+from decimal import Decimal
 from sqlmodel import Field, SQLModel
 
 
@@ -31,11 +32,12 @@ class Pet(SQLModel, table=True):
     breed_id: int = Field(foreign_key="breed.id")
     status: str
     uuid: str
+    weight: Optional[Decimal] = Field(default=None)
+    going_out_often: Optional[bool] = Field(default=None)
     date_created: datetime = Field(default_factory=datetime.now)
+    adopter_id: Optional[int] = Field(default=None)
     user_id: Optional[int] = Field(
         default=None
     )  # Assuming user_id exists based on typical schema, though not in query
-    image: Optional[str] = Field(default=None)
-
     # Relationships (Optional for now, but good practice)
     # breed: Optional[Breed] = Relationship()
