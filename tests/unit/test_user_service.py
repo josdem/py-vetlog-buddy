@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 import pytest
 
 from vetlog_buddy.users.model import User
@@ -63,3 +65,20 @@ def test_is_invalid(username, expected):
     service = UserService(repo=DummyRepo())
     user = User(username=username)
     assert service.is_invalid(user) == expected
+
+
+def test_get_by_id():
+    """Get user by id"""
+    mock_repo = MagicMock()
+    service = UserService(repo=mock_repo)
+    user = User(
+        id=1,
+        username="josdem",
+        email="contact@josdem.io",
+        mobile="1234567890",
+        role="user",
+    )
+    mock_repo.find_by_id.return_value = user
+    result = service.get_by_id(1)
+    assert result == user
+    mock_repo.find_by_id.assert_called_once_with(1)
