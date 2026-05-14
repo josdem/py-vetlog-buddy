@@ -40,8 +40,8 @@ def test_get_pending_dewormings(mock_repo):
         )
     ]
     mock_repo.find_pending_dewormings.return_value = dewormings
-    assert service.get_pending_dewormings() == dewormings
-    mock_repo.find_pending_dewormings.assert_called_once_with()
+    assert service.get_pending_dewormings(12) == dewormings
+    mock_repo.find_pending_dewormings.assert_called_once_with(12)
 
 
 def test_create_deworming(mock_repo):
