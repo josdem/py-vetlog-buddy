@@ -142,18 +142,20 @@ def test_list_dewormings_no_duplicate_events_when_pet_in_both_lists():
         patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
         patch("vetlog_buddy.main.PetRepository.find_by_id", return_value=outdoor_pet),
         patch("vetlog_buddy.main.UserRepository.find_by_id", return_value=owner()),
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccinationService,
         patch("vetlog_buddy.main.PetService") as MockPetService,
     ):
+        mock_vaccination_service = MockVaccinationService.return_value
         mock_pet_service = MockPetService.return_value
 
-    # Same pet appears in both the 12-month and 6-month results
-    mock_pet_service.get_pending_dewormings.side_effect = lambda months: (
-        [deworming()] if months in (12, 6) else []
-    )
+        # Same pet appears in both the 12-month and 6-month results
+        mock_vaccination_service.get_pending_dewormings.side_effect = lambda months: (
+            [deworming()] if months in (12, 6) else []
+        )
 
-    main.dewormings()
+        main.dewormings()
 
-    mock_pet_service.create_deworming.call_once_with(outdoor_pet)
+        mock_pet_service.create_deworming.call_once_with(outdoor_pet)
 
 
 def test_version_check(capsys):
