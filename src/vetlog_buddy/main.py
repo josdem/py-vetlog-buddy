@@ -54,7 +54,8 @@ def dewormings():
         vacc_repo = VaccinationRepository(session)
         vacc_service = VaccinationService(vacc_repo)
         pet_service = PetService(pet_repo, vacc_service)
-        required_dewormings = vacc_service.get_pending_dewormings(12)
+        pending_dewormings = vacc_service.get_pending_dewormings(12)
+        required_dewormings = list({d.pet_id: d for d in pending_dewormings}.values())
         required_pet_ids = {d.pet_id for d in required_dewormings}
         possible_dewormings = vacc_service.get_pending_dewormings(6)
         for deworming in possible_dewormings:
