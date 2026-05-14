@@ -12,14 +12,17 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License
 
+from unittest.mock import MagicMock
+
 from vetlog_buddy.users.model import User
 from vetlog_buddy.users.repository import UserRepository
 
 
-def test_get_user_by_id(mock_repo):
+def test_get_user_by_id():
     """Get user by ID"""
-    service = UserRepository(repository=mock_repo)
+    mock_session_cm = MagicMock()
+    repository = UserRepository(session=mock_session_cm)
     user = User(id=1, name="Alice", email="alice@example.com")
-    mock_repo.find_by_id.return_value = user
-    assert service.get_user_by_id(1) == user
-    mock_repo.find_by_id.assert_called_once_with(1)
+    mock_session_cm.exec().one.return_value = user
+    assert repository.find_by_id(1) == user
+    mock_session_cm.exec().one.assert_called_once()
