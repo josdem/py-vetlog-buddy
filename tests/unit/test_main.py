@@ -120,7 +120,7 @@ def test_pending_dewormings():
 
         # Assertions to ensure the correct calls were made
         assert mock_pet_service.get_by_id.call_count == 2
-        assert mock_pet_service.create_deworming.call_count == 2
+        assert mock_vacc_service.create_deworming.call_count == 2
 
 
 def test_list_dewormings_no_duplicate_events_when_pet_in_both_lists():
