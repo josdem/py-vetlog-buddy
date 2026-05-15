@@ -1,4 +1,5 @@
 from vetlog_buddy.users.repository import UserRepository
+from vetlog_buddy.users.model import User
 
 
 class UserService:
@@ -54,3 +55,7 @@ class UserService:
         upper_count = sum(1 for c in username if c.isupper())
         ratio = upper_count / len(username)
         return ratio
+
+    def get_by_id(self, id: int) -> User:
+        """Return owner by id"""
+        return self.repo.find_by_id(id)

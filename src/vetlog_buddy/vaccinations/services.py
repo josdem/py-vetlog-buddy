@@ -57,9 +57,9 @@ class VaccinationService:
             self.logger.info("Generating %s vaccination", vaccine)
             self.repository.create(pet_id, vaccine)
 
-    def get_pending_dewormings(self):
+    def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""
-        return self.repository.find_pending_dewormings()
+        return self.repository.find_pending_dewormings(months)
 
     def create_deworming(self, pet: Pet):
         """Create a deworming record for a pet"""

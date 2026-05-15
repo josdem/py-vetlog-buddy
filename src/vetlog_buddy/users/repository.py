@@ -24,3 +24,6 @@ class UserRepository:
     def delete(self, user: User) -> None:
         self.session.delete(user)
         self.session.commit()
+
+    def find_by_id(self, id: int) -> User:
+        return self.session.exec(select(User).where(User.id == id)).one()

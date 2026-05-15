@@ -36,7 +36,7 @@ def test_find_pending_dewormings():
     session.exec.return_value.all.return_value = [vaccination]
 
     before_cutoff = datetime.now() - timedelta(days=30 * 12)
-    pending_dewormings = repository.find_pending_dewormings()
+    pending_dewormings = repository.find_pending_dewormings(12)
     after_cutoff = datetime.now() - timedelta(days=30 * 12)
 
     session.exec.assert_called_once()

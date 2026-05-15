@@ -1,6 +1,30 @@
 from unittest.mock import MagicMock, patch
+from datetime import datetime
 
 from vetlog_buddy import main
+from vetlog_buddy.users.model import User
+from vetlog_buddy.pets.model import Pet
+from vetlog_buddy.vaccinations.model import Vaccination
+
+
+def deworming():
+    return Vaccination(
+        pet_id=1,
+        name="Deworming",
+        date=datetime(2024, 5, 21),
+    )
+
+
+def owner():
+    return User(
+        id=1,
+        username="josdem",
+        first_name="Jose",
+        last_name="Morales",
+        email="contact@josdem.io",
+        mobile="1234567890",
+        role="USER",
+    )
 
 
 def test_remove_invalid_users():
@@ -95,8 +119,43 @@ def test_pending_dewormings():
         main.dewormings()
 
         # Assertions to ensure the correct calls were made
-        mock_vacc_service.get_pending_dewormings.assert_called_once()
         assert mock_pet_service.get_pet_by_id.call_count == 2
+        assert mock_pet_service.create_deworming.call_count == 2
+
+
+def test_list_dewormings_no_duplicate_events_when_pet_in_both_lists():
+    """No duplicate calendar event when a pet appears in both the 12-month and 6-month required lists"""
+
+    outdoor_pet = Pet(
+        id=1,
+        user_id=1,
+        adopter_id=None,
+        name="Sora",
+        birth_date=datetime(2020, 1, 1, 0, 0, 0),
+        breed_id=1,
+        going_out_often=True,
+    )
+
+    mock_session_cm = MagicMock()
+
+    with (
+        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
+        patch("vetlog_buddy.main.PetRepository.find_by_id", return_value=outdoor_pet),
+        patch("vetlog_buddy.main.UserRepository.find_by_id", return_value=owner()),
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccinationService,
+        patch("vetlog_buddy.main.PetService") as MockPetService,
+    ):
+        mock_vaccination_service = MockVaccinationService.return_value
+        mock_pet_service = MockPetService.return_value
+
+        # Same pet appears in both the 12-month and 6-month results
+        mock_vaccination_service.get_pending_dewormings.side_effect = lambda months: (
+            [deworming()] if months in (12, 6) else []
+        )
+
+        main.dewormings()
+
+        mock_pet_service.create_deworming.call_once_with(outdoor_pet)
 
 
 def test_version_check(capsys):

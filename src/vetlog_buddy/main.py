@@ -54,10 +54,21 @@ def dewormings():
         vacc_repo = VaccinationRepository(session)
         vacc_service = VaccinationService(vacc_repo)
         pet_service = PetService(pet_repo, vacc_service)
-        required_dewormings = vacc_service.get_pending_dewormings()
+        pending_dewormings = vacc_service.get_pending_dewormings(12)
+        required_dewormings = list({d.pet_id: d for d in pending_dewormings}.values())
+        required_pet_ids = {d.pet_id for d in required_dewormings}
+        possible_dewormings = vacc_service.get_pending_dewormings(6)
+        for deworming in possible_dewormings:
+            if deworming.pet_id not in required_pet_ids:
+                pet = pet_repo.find_by_id(deworming.pet_id)
+                if pet.going_out_often:
+                    required_dewormings.append(deworming)
+                    required_pet_ids.add(deworming.pet_id)
+
         print(f"Found {len(required_dewormings)} pending dewormings")
         for deworming in required_dewormings:
             pet = pet_service.get_pet_by_id(deworming.pet_id)
+            pet_service.create_deworming(pet)
             print(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
 
 
