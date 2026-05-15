@@ -112,14 +112,14 @@ def test_pending_dewormings():
         ]
 
         # Setup the pet service to return pet details
-        mock_pet_service.get_pet_by_id.side_effect = lambda pet_id: MagicMock(
+        mock_pet_service.get_by_id.side_effect = lambda pet_id: MagicMock(
             name=f"Pet{pet_id}", id=pet_id
         )
 
         main.dewormings()
 
         # Assertions to ensure the correct calls were made
-        assert mock_pet_service.get_pet_by_id.call_count == 2
+        assert mock_pet_service.get_by_id.call_count == 2
         assert mock_pet_service.create_deworming.call_count == 2
 
 
