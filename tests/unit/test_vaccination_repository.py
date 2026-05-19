@@ -94,7 +94,7 @@ def test_delete_applied_dewormings():
 
     session.exec.return_value.all.return_value = [vaccination]
 
-    repository.delete_applied_dewormings()
+    repository.delete_applied_dewormings(1)
 
     session.exec.assert_called_once()
     session.delete.assert_called_once_with(vaccination)
