@@ -40,16 +40,16 @@ class VaccinationRepository:
             & (Vaccination.date <= datetime.now() - timedelta(days=30 * months))
         )
         return self.session.exec(stmt).all()
-    
+
     def delete_applied_dewormings(self):
-      stmt = select(Vaccination).where(
-        (Vaccination.status == "APPLIED")
-        & (Vaccination.name == VaccineType.DEWORMING)
-      )
+        stmt = select(Vaccination).where(
+            (Vaccination.status == "APPLIED")
+            & (Vaccination.name == VaccineType.DEWORMING)
+        )
 
-      vaccinations = self.session.exec(stmt).all()
+        vaccinations = self.session.exec(stmt).all()
 
-      for vaccination in vaccinations:
-        self.session.delete(vaccination)
+        for vaccination in vaccinations:
+            self.session.delete(vaccination)
 
-      self.session.commit()
+        self.session.commit()

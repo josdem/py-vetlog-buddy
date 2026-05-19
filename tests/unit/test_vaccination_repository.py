@@ -78,6 +78,8 @@ def test_create_deworming():
     assert added_vaccination.pet_id == pet_id
     assert added_vaccination.name == vaccine_name
     assert added_vaccination.status == "NEW"
+
+
 def test_delete_applied_dewormings():
     session = MagicMock(spec=Session)
     repository = VaccinationRepository(session)
