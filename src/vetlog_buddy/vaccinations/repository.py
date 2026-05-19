@@ -41,10 +41,11 @@ class VaccinationRepository:
         )
         return self.session.exec(stmt).all()
 
-    def delete_applied_dewormings(self):
+    def delete_applied_dewormings(self, pet_id: int):
         stmt = select(Vaccination).where(
             (Vaccination.status == "APPLIED")
             & (Vaccination.name == VaccineType.DEWORMING)
+            & (Vaccination.pet_id == pet_id)
         )
 
         vaccinations = self.session.exec(stmt).all()

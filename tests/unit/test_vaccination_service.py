@@ -54,7 +54,7 @@ def test_create_deworming(mock_repo):
         status="ACTIVE",
     )
     service.create_deworming(pet)
-    mock_repo.delete_applied_dewormings.assert_called_once()
+    mock_repo.delete_applied_dewormings.assert_called_once_with(pet.id)
     mock_repo.create.assert_called_once_with(pet.id, "Deworming")
 
 
