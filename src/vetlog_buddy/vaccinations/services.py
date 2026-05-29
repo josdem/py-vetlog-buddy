@@ -75,6 +75,15 @@ class VaccinationService:
             return
 
         print(f"Registering vaccination for pet: {pet.name}")
+        now = datetime.now()
+        weeks = (now - pet.birth_date).days / 7
+        print(f"Pet is {int(weeks)} weeks old")
+
+        vaccines = strategy.get_vaccines(int(weeks))
+
+        for vaccine in vaccines:
+            print(f"Generating {vaccine} vaccination")
+            self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""

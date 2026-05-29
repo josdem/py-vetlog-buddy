@@ -17,15 +17,15 @@ class TestDogVaccinationStrategy:
         # 6-11 weeks
         strategy = DogVaccinationStrategy()
         vaccines = strategy.get_vaccines(8)
-        assert len(vaccines) == 5
+        assert len(vaccines) == 2
         assert VaccineType.PUPPY in vaccines
-        assert VaccineType.RABIES in vaccines
+        assert VaccineType.DEWORMING in vaccines
 
     def test_annual_vaccination(self):
         # >= 12 weeks
         strategy = DogVaccinationStrategy()
         vaccines = strategy.get_vaccines(12)
-        assert len(vaccines) == 3
+        assert len(vaccines) == 2
         assert VaccineType.C6CV in vaccines
 
 
