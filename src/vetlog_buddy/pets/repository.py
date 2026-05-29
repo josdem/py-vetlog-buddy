@@ -53,4 +53,4 @@ class PetRepository:
             .where(Pet.id == pet_id)
         )
         result = self.session.exec(stmt).one_or_none()
-        return result[0] if result else None
+        return result if result else None
