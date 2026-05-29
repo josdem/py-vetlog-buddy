@@ -17,16 +17,18 @@ from typing import Sequence
 from datetime import datetime, timedelta
 from sqlmodel import Session, select
 
-from vetlog_buddy.vaccinations.model import Vaccination, VaccineType
+from vetlog_buddy.vaccinations.model import Vaccination, VaccineType, VaccineStatus
 
 
 class VaccinationRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, pet_id: int, vaccine_name: str) -> Vaccination:
+    def create(
+        self, pet_id: int, vaccine_name: str, status: VaccineStatus = VaccineStatus.NEW
+    ) -> Vaccination:
         vaccination = Vaccination(
-            pet_id=pet_id, name=vaccine_name, date=datetime.now(), status="NEW"
+            pet_id=pet_id, name=vaccine_name, date=datetime.now(), status=status
         )
         self.session.add(vaccination)
         self.session.commit()
@@ -35,7 +37,7 @@ class VaccinationRepository:
 
     def find_pending_dewormings(self, months: int) -> Sequence[Vaccination]:
         stmt = select(Vaccination).where(
-            (Vaccination.status == "APPLIED")
+            (Vaccination.status == VaccineStatus.APPLIED)
             & (Vaccination.name == VaccineType.DEWORMING)
             & (Vaccination.date <= datetime.now() - timedelta(days=30 * months))
         )
@@ -43,7 +45,7 @@ class VaccinationRepository:
 
     def delete_applied_dewormings(self, pet_id: int):
         stmt = select(Vaccination).where(
-            (Vaccination.status == "APPLIED")
+            (Vaccination.status == VaccineStatus.APPLIED)
             & (Vaccination.name == VaccineType.DEWORMING)
             & (Vaccination.pet_id == pet_id)
         )
