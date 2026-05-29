@@ -14,11 +14,11 @@
 
 import pytest
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import MagicMock
 
 from vetlog_buddy.pets.model import Pet
-from vetlog_buddy.vaccinations.model import Vaccination
+from vetlog_buddy.vaccinations.model import Vaccination, VaccineStatus
 from vetlog_buddy.vaccinations.services import VaccinationService
 
 
@@ -81,4 +81,50 @@ def test_should_not_create_deworming_for_deceased_pet(mock_repo):
         status="DECEASED",
     )
     service.create_deworming(pet)
+    mock_repo.create.assert_not_called()
+
+
+def test_create_vaccination_for_dog(mock_repo):
+    """Create vaccination records for a dog"""
+    pet_repository = MagicMock()
+    pet_repository.find_pet_type.return_value = "DOG"
+    service = VaccinationService(repository=mock_repo, pet_repository=pet_repository)
+    pet = Pet(id=5, name="Rex", birth_date=datetime.now() - timedelta(weeks=8), status="ACTIVE")
+
+    service.create_vaccination(pet)
+
+    pet_repository.find_pet_type.assert_called_once_with(pet.id)
+    mock_repo.create.assert_any_call(pet.id, "PUPPY", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
+
+
+def test_create_vaccination_for_cat(mock_repo):
+    """Create vaccination records for a cat"""
+    pet_repository = MagicMock()
+    pet_repository.find_pet_type.return_value = "CAT"
+    service = VaccinationService(repository=mock_repo, pet_repository=pet_repository)
+    pet = Pet(
+        id=6, name="Mittens", birth_date=datetime.now() - timedelta(weeks=10), status="ACTIVE"
+    )
+
+    service.create_vaccination(pet)
+
+    pet_repository.find_pet_type.assert_called_once_with(pet.id)
+    mock_repo.create.assert_any_call(pet.id, "TRICAT", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "TRICAT_BOOST", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "FeLV", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Rabies", VaccineStatus.PENDING)
+
+
+def test_should_not_create_vaccination_for_unknown_pet_type(mock_repo):
+    """Do not create vaccination record for unknown pet type"""
+    pet_repository = MagicMock()
+    pet_repository.find_pet_type.return_value = "BIRD"
+    service = VaccinationService(repository=mock_repo, pet_repository=pet_repository)
+    pet = Pet(id=7, name="Rio", birth_date=datetime.now() - timedelta(weeks=12), status="ACTIVE")
+
+    service.create_vaccination(pet)
+
+    pet_repository.find_pet_type.assert_called_once_with(pet.id)
     mock_repo.create.assert_not_called()
