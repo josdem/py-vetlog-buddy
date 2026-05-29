@@ -83,7 +83,9 @@ def test_vaccines():
 
         MockPetRepository.assert_called_once_with(mock_session)
         MockVaccRepository.assert_called_once_with(mock_session)
-        MockVaccService.assert_called_once_with(MockVaccRepository.return_value)
+        MockVaccService.assert_called_once_with(
+            MockVaccRepository.return_value, MockPetRepository.return_value
+        )
         MockPetService.assert_called_once_with(
             MockPetRepository.return_value, MockVaccService.return_value
         )

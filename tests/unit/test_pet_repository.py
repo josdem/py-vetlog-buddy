@@ -25,7 +25,12 @@ def test_get_pet_type():
     repo = PetRepository(session)
     pet = Pet(id=1, name="Sora")
 
-    repo.find_pet_type.return_value = "DOG"
+    repo.find_pet_type(pet.id)
 
-    assert repo.find_pet_type(pet.id) == "DOG"
-    repo.find_pet_type.assert_called_once_with(pet.id)
+    session.exec.assert_called_once()
+    statement = session.exec.call_args.args[0]
+    compiled_statement = statement.compile()
+    statement_str = str(compiled_statement)
+    assert "SELECT breed.type" in statement_str
+    assert "JOIN pet ON pet.breed_id = breed.id" in statement_str
+    assert "WHERE pet.id = :id_1" in statement_str

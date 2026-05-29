@@ -29,7 +29,7 @@ def mock_repo():
 
 def test_get_pending_dewormings(mock_repo):
     """Get pending dewormings"""
-    service = VaccinationService(repository=mock_repo)
+    service = VaccinationService(repository=mock_repo, pet_repository=MagicMock())
     dewormings = [
         Vaccination(
             id=1,
@@ -46,7 +46,7 @@ def test_get_pending_dewormings(mock_repo):
 
 def test_create_deworming(mock_repo):
     """Create a deworming record for a pet"""
-    service = VaccinationService(repository=mock_repo)
+    service = VaccinationService(repository=mock_repo, pet_repository=MagicMock())
     pet = Pet(
         id=2,
         name="Buddy",
@@ -60,7 +60,7 @@ def test_create_deworming(mock_repo):
 
 def test_should_not_create_deworming_for_inactive_pet(mock_repo):
     """Do not create a deworming record for an inactive pet"""
-    service = VaccinationService(repository=mock_repo)
+    service = VaccinationService(repository=mock_repo, pet_repository=MagicMock())
     pet = Pet(
         id=3,
         name="Whiskers",
@@ -73,7 +73,7 @@ def test_should_not_create_deworming_for_inactive_pet(mock_repo):
 
 def test_should_not_create_deworming_for_deceased_pet(mock_repo):
     """Do not create a deworming record for a deceased pet"""
-    service = VaccinationService(repository=mock_repo)
+    service = VaccinationService(repository=mock_repo, pet_repository=MagicMock())
     pet = Pet(
         id=4,
         name="Shadow",
