@@ -14,6 +14,7 @@
 
 from datetime import datetime
 from vetlog_buddy.pets.model import Pet
+from vetlog_buddy.pets.repository import PetRepository
 from vetlog_buddy.shared.logger import Logger
 from vetlog_buddy.vaccinations.model import VaccineType, VaccineStatus
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
@@ -27,8 +28,11 @@ EXCLUDED_STATUSES = frozenset({"INACTIVE", "DECEASED"})
 
 
 class VaccinationService:
-    def __init__(self, repository: VaccinationRepository):
+    def __init__(
+        self, repository: VaccinationRepository, pet_repository: PetRepository
+    ):
         self.repository = repository
+        self.pet_repository = pet_repository
         self.logger = Logger("VaccinationService")
 
     def vaccinate_pet(
@@ -56,6 +60,21 @@ class VaccinationService:
         for vaccine in vaccines:
             self.logger.info("Generating %s vaccination", vaccine)
             self.repository.create(pet_id, vaccine, VaccineStatus.NEW)
+
+    def create_vaccination(self, pet: Pet):
+        pet_type = self.pet_repository.get_pet_type(pet.id)
+        strategy: VaccinationStrategy | None = None
+
+        if pet_type == "DOG":
+            strategy = DogVaccinationStrategy()
+        elif pet_type == "CAT":
+            strategy = CatVaccinationStrategy()
+
+        if not strategy:
+            self.logger.info("No vaccination strategy for pet type: %s", pet_type)
+            return
+
+        print(f"Registering vaccination for pet: {pet.name}")
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""

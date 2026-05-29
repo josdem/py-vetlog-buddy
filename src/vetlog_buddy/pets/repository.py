@@ -45,3 +45,13 @@ class PetRepository:
 
     def find_by_id(self, id: int) -> Pet | None:
         return self.session.exec(select(Pet).where(Pet.id == id)).one_or_none()
+
+    # TODO: Create a test for this method
+    def get_pet_type(self, pet_id: int) -> str | None:
+        stmt = (
+            select(Breed.type)
+            .join(Pet, Pet.breed_id == Breed.id)
+            .where(Pet.id == pet_id)
+        )
+        result = self.session.exec(stmt).one_or_none()
+        return result[0] if result else None
