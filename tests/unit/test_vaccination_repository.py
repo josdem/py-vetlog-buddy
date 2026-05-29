@@ -17,7 +17,7 @@ from unittest.mock import MagicMock
 
 from sqlmodel import Session
 
-from vetlog_buddy.vaccinations.model import Vaccination
+from vetlog_buddy.vaccinations.model import Vaccination, VaccineStatus
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
 
 
@@ -68,7 +68,7 @@ def test_create_deworming():
 
     pet_id = 1
     vaccine_name = "Deworming"
-    repository.create(pet_id, vaccine_name)
+    repository.create(pet_id, vaccine_name, VaccineStatus.NEW)
 
     session.add.assert_called_once()
     session.commit.assert_called_once()

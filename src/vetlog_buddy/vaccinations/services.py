@@ -15,7 +15,7 @@
 from datetime import datetime
 from vetlog_buddy.pets.model import Pet
 from vetlog_buddy.shared.logger import Logger
-from vetlog_buddy.vaccinations.model import VaccineType
+from vetlog_buddy.vaccinations.model import VaccineType, VaccineStatus
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
 from vetlog_buddy.vaccinations.strategies import (
     CatVaccinationStrategy,
@@ -55,7 +55,7 @@ class VaccinationService:
 
         for vaccine in vaccines:
             self.logger.info("Generating %s vaccination", vaccine)
-            self.repository.create(pet_id, vaccine)
+            self.repository.create(pet_id, vaccine, VaccineStatus.NEW)
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""
@@ -65,4 +65,4 @@ class VaccinationService:
         """Create a deworming record for a pet"""
         if pet.status not in EXCLUDED_STATUSES:
             self.repository.delete_applied_dewormings(pet.id)
-            self.repository.create(pet.id, VaccineType.DEWORMING)
+            self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
