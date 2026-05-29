@@ -62,7 +62,7 @@ class VaccinationService:
             self.repository.create(pet_id, vaccine, VaccineStatus.NEW)
 
     def create_vaccination(self, pet: Pet):
-        pet_type = self.pet_repository.get_pet_type(pet.id)
+        pet_type = self.pet_repository.find_pet_type(pet.id)
         strategy: VaccinationStrategy | None = None
 
         if pet_type == "DOG":
