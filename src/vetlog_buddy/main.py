@@ -43,7 +43,7 @@ def vaccines():
     with get_session() as session:
         pet_repo = PetRepository(session)
         vacc_repo = VaccinationRepository(session)
-        vacc_service = VaccinationService(vacc_repo)
+        vacc_service = VaccinationService(vacc_repo, pet_repo)
         pet_service = PetService(pet_repo, vacc_service)
         pet_service.process_vaccinations()
 
@@ -52,7 +52,7 @@ def dewormings():
     with get_session() as session:
         pet_repo = PetRepository(session)
         vacc_repo = VaccinationRepository(session)
-        vacc_service = VaccinationService(vacc_repo)
+        vacc_service = VaccinationService(vacc_repo, pet_repo)
         pet_service = PetService(pet_repo, vacc_service)
         pending_dewormings = vacc_service.get_pending_dewormings(12)
         required_dewormings = list({d.pet_id: d for d in pending_dewormings}.values())
