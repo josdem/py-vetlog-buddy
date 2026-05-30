@@ -89,7 +89,12 @@ def test_create_vaccination_for_dog(mock_repo):
     pet_repository = MagicMock()
     pet_repository.find_pet_type.return_value = "DOG"
     service = VaccinationService(repository=mock_repo, pet_repository=pet_repository)
-    pet = Pet(id=5, name="Rex", birth_date=datetime.now() - timedelta(weeks=8), status="ACTIVE")
+    pet = Pet(
+        id=5,
+        name="Rex",
+        birth_date=datetime.now() - timedelta(weeks=8),
+        status="ACTIVE",
+    )
 
     service.create_vaccination(pet)
 
@@ -104,7 +109,10 @@ def test_create_vaccination_for_cat(mock_repo):
     pet_repository.find_pet_type.return_value = "CAT"
     service = VaccinationService(repository=mock_repo, pet_repository=pet_repository)
     pet = Pet(
-        id=6, name="Mittens", birth_date=datetime.now() - timedelta(weeks=10), status="ACTIVE"
+        id=6,
+        name="Mittens",
+        birth_date=datetime.now() - timedelta(weeks=10),
+        status="ACTIVE",
     )
 
     service.create_vaccination(pet)
@@ -122,7 +130,12 @@ def test_should_not_create_vaccination_for_unknown_pet_type(mock_repo):
     pet_repository = MagicMock()
     pet_repository.find_pet_type.return_value = "BIRD"
     service = VaccinationService(repository=mock_repo, pet_repository=pet_repository)
-    pet = Pet(id=7, name="Rio", birth_date=datetime.now() - timedelta(weeks=12), status="ACTIVE")
+    pet = Pet(
+        id=7,
+        name="Rio",
+        birth_date=datetime.now() - timedelta(weeks=12),
+        status="ACTIVE",
+    )
 
     service.create_vaccination(pet)
 
