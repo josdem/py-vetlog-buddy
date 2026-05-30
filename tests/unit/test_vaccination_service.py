@@ -14,11 +14,11 @@
 
 import pytest
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import MagicMock
 
 from vetlog_buddy.pets.model import Pet
-from vetlog_buddy.vaccinations.model import Vaccination
+from vetlog_buddy.vaccinations.model import Vaccination, VaccineStatus
 from vetlog_buddy.vaccinations.services import VaccinationService
 
 
@@ -81,4 +81,58 @@ def test_should_not_create_deworming_for_deceased_pet(mock_repo):
         status="DECEASED",
     )
     service.create_deworming(pet)
+    mock_repo.create.assert_not_called()
+
+
+def test_create_missing_pending_vaccinations_for_young_cat(mock_repo):
+    service = VaccinationService(repository=mock_repo)
+    pet = Pet(
+        id=1,
+        name="Whiskers",
+        birth_date=datetime.now() - timedelta(weeks=6),
+        status="ACTIVE",
+    )
+    mock_repo.find_pending_vaccination.return_value = None
+
+    service.create_missing_pending_vaccinations_for_cat(pet)
+
+    mock_repo.find_pending_vaccination.assert_called_once_with(pet.id, "Deworming")
+    mock_repo.create.assert_called_once_with(pet.id, "Deworming", VaccineStatus.PENDING)
+
+
+def test_create_missing_pending_vaccinations_for_older_cat(mock_repo):
+    service = VaccinationService(repository=mock_repo)
+    pet = Pet(
+        id=2,
+        name="Mittens",
+        birth_date=datetime.now() - timedelta(weeks=12),
+        status="ACTIVE",
+    )
+    mock_repo.find_pending_vaccination.return_value = None
+
+    service.create_missing_pending_vaccinations_for_cat(pet)
+
+    mock_repo.create.assert_any_call(pet.id, "TRICAT", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
+    assert mock_repo.create.call_count == 2
+
+
+def test_should_not_create_existing_pending_vaccinations_for_cat(mock_repo):
+    service = VaccinationService(repository=mock_repo)
+    pet = Pet(
+        id=3,
+        name="Luna",
+        birth_date=datetime.now() - timedelta(weeks=12),
+        status="ACTIVE",
+    )
+    mock_repo.find_pending_vaccination.return_value = Vaccination(
+        id=1,
+        pet_id=pet.id,
+        name="TRICAT",
+        date=datetime.now(),
+        status="PENDING",
+    )
+
+    service.create_missing_pending_vaccinations_for_cat(pet)
+
     mock_repo.create.assert_not_called()

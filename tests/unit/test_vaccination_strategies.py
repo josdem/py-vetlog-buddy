@@ -1,6 +1,7 @@
 from vetlog_buddy.vaccinations.strategies import (
     DogVaccinationStrategy,
     CatVaccinationStrategy,
+    CatPendingVaccinationStrategy,
 )
 from vetlog_buddy.vaccinations.model import VaccineType
 
@@ -50,3 +51,15 @@ class TestCatVaccinationStrategy:
         vaccines = strategy.get_vaccines(17)
         assert len(vaccines) == 3
         assert VaccineType.TRICAT in vaccines
+
+
+class TestCatPendingVaccinationStrategy:
+    def test_young_cat(self):
+        strategy = CatPendingVaccinationStrategy()
+        vaccines = strategy.get_vaccines(8)
+        assert vaccines == [VaccineType.DEWORMING]
+
+    def test_older_cat(self):
+        strategy = CatPendingVaccinationStrategy()
+        vaccines = strategy.get_vaccines(9)
+        assert vaccines == [VaccineType.TRICAT, VaccineType.DEWORMING]

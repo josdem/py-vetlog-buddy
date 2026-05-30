@@ -17,7 +17,7 @@ from unittest.mock import MagicMock
 
 from sqlmodel import Session
 
-from vetlog_buddy.vaccinations.model import Vaccination
+from vetlog_buddy.vaccinations.model import Vaccination, VaccineStatus
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
 
 
@@ -78,6 +78,40 @@ def test_create_deworming():
     assert added_vaccination.pet_id == pet_id
     assert added_vaccination.name == vaccine_name
     assert added_vaccination.status == "NEW"
+
+
+def test_create_pending_vaccination():
+    session = MagicMock(spec=Session)
+    repository = VaccinationRepository(session)
+
+    repository.create(1, "TRICAT", VaccineStatus.PENDING)
+
+    added_vaccination = session.add.call_args.args[0]
+    assert added_vaccination.status == "PENDING"
+    assert added_vaccination.name == "TRICAT"
+
+
+def test_find_pending_vaccination():
+    session = MagicMock(spec=Session)
+    repository = VaccinationRepository(session)
+
+    vaccination = Vaccination(
+        id=1,
+        pet_id=1,
+        name="Deworming",
+        date=datetime.now(),
+        status="PENDING",
+    )
+    session.exec.return_value.one_or_none.return_value = vaccination
+
+    result = repository.find_pending_vaccination(1, "Deworming")
+
+    session.exec.assert_called_once()
+    statement = session.exec.call_args.args[0]
+    compiled_statement = statement.compile()
+    assert any(value == "PENDING" for value in compiled_statement.params.values())
+    assert any(value == "Deworming" for value in compiled_statement.params.values())
+    assert result == vaccination
 
 
 def test_delete_applied_dewormings():

@@ -15,9 +15,10 @@
 from datetime import datetime
 from vetlog_buddy.pets.model import Pet
 from vetlog_buddy.shared.logger import Logger
-from vetlog_buddy.vaccinations.model import VaccineType
+from vetlog_buddy.vaccinations.model import VaccineType, VaccineStatus
 from vetlog_buddy.vaccinations.repository import VaccinationRepository
 from vetlog_buddy.vaccinations.strategies import (
+    CatPendingVaccinationStrategy,
     CatVaccinationStrategy,
     DogVaccinationStrategy,
     VaccinationStrategy,
@@ -66,3 +67,13 @@ class VaccinationService:
         if pet.status not in EXCLUDED_STATUSES:
             self.repository.delete_applied_dewormings(pet.id)
             self.repository.create(pet.id, VaccineType.DEWORMING)
+
+    def create_missing_pending_vaccinations_for_cat(self, pet: Pet):
+        strategy = CatPendingVaccinationStrategy()
+        weeks = int((datetime.now() - pet.birth_date).days / 7)
+        vaccines = strategy.get_vaccines(weeks)
+
+        for vaccine in vaccines:
+            if self.repository.find_pending_vaccination(pet.id, vaccine):
+                continue
+            self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
