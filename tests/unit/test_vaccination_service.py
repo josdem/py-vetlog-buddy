@@ -63,9 +63,7 @@ def test_create_deworming(service, mock_repo):
     )
     service.create_deworming(pet)
     mock_repo.delete_applied_dewormings.assert_called_once_with(pet.id)
-    mock_repo.create.assert_called_once_with(
-        pet.id, "Deworming", VaccineStatus.NEW
-    )
+    mock_repo.create.assert_called_once_with(pet.id, "Deworming", VaccineStatus.NEW)
 
 
 def test_should_not_create_deworming_for_inactive_pet(service, mock_repo):
