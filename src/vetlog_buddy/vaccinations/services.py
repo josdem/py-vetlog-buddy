@@ -82,6 +82,11 @@ class VaccinationService:
         vaccines = strategy.get_vaccines(int(weeks))
 
         for vaccine in vaccines:
+            if self.repository.find_pending_vaccination(pet.id, vaccine):
+                print(
+                    f"Pending {vaccine} vaccination already exists for pet: {pet.name}"
+                )
+                continue
             print(f"Generating {vaccine} vaccination")
             self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 

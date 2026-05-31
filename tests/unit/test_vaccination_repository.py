@@ -99,3 +99,37 @@ def test_delete_applied_dewormings():
     session.exec.assert_called_once()
     session.delete.assert_called_once_with(vaccination)
     session.commit.assert_called_once()
+
+
+def test_create_pending_vaccination():
+    session = MagicMock(spec=Session)
+    repository = VaccinationRepository(session)
+
+    repository.create(1, "TRICAT", VaccineStatus.PENDING)
+
+    added_vaccination = session.add.call_args.args[0]
+    assert added_vaccination.status == "PENDING"
+    assert added_vaccination.name == "TRICAT"
+
+
+def test_find_pending_vaccination():
+    session = MagicMock(spec=Session)
+    repository = VaccinationRepository(session)
+
+    vaccination = Vaccination(
+        id=1,
+        pet_id=1,
+        name="Deworming",
+        date=datetime.now(),
+        status="PENDING",
+    )
+    session.exec.return_value.one_or_none.return_value = vaccination
+
+    result = repository.find_pending_vaccination(1, "Deworming")
+
+    session.exec.assert_called_once()
+    statement = session.exec.call_args.args[0]
+    compiled_statement = statement.compile()
+    assert any(value == "PENDING" for value in compiled_statement.params.values())
+    assert any(value == "Deworming" for value in compiled_statement.params.values())
+    assert result == vaccination

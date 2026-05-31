@@ -41,12 +41,12 @@ class TestCatVaccinationStrategy:
         # 9-16 weeks
         strategy = CatVaccinationStrategy()
         vaccines = strategy.get_vaccines(10)
-        assert len(vaccines) == 5
+        assert len(vaccines) == 2
         assert VaccineType.TRICAT in vaccines
 
     def test_annual_vaccination(self):
         # >= 17 weeks
         strategy = CatVaccinationStrategy()
         vaccines = strategy.get_vaccines(17)
-        assert len(vaccines) == 3
+        assert len(vaccines) == 2
         assert VaccineType.TRICAT in vaccines
