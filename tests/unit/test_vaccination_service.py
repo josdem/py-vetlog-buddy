@@ -27,9 +27,18 @@ def mock_repo():
     return MagicMock()
 
 
-def test_get_pending_dewormings(mock_repo):
+@pytest.fixture
+def mock_pet_repo():
+    return MagicMock()
+
+
+@pytest.fixture
+def service(mock_repo, mock_pet_repo):
+    return VaccinationService(repository=mock_repo, pet_repository=mock_pet_repo)
+
+
+def test_get_pending_dewormings(service, mock_repo):
     """Get pending dewormings"""
-    service = VaccinationService(repository=mock_repo)
     dewormings = [
         Vaccination(
             id=1,
@@ -44,9 +53,8 @@ def test_get_pending_dewormings(mock_repo):
     mock_repo.find_pending_dewormings.assert_called_once_with(12)
 
 
-def test_create_deworming(mock_repo):
+def test_create_deworming(service, mock_repo):
     """Create a deworming record for a pet"""
-    service = VaccinationService(repository=mock_repo)
     pet = Pet(
         id=2,
         name="Buddy",
@@ -58,9 +66,8 @@ def test_create_deworming(mock_repo):
     mock_repo.create.assert_called_once_with(pet.id, "Deworming")
 
 
-def test_should_not_create_deworming_for_inactive_pet(mock_repo):
+def test_should_not_create_deworming_for_inactive_pet(service, mock_repo):
     """Do not create a deworming record for an inactive pet"""
-    service = VaccinationService(repository=mock_repo)
     pet = Pet(
         id=3,
         name="Whiskers",
@@ -71,9 +78,8 @@ def test_should_not_create_deworming_for_inactive_pet(mock_repo):
     mock_repo.create.assert_not_called()
 
 
-def test_should_not_create_deworming_for_deceased_pet(mock_repo):
+def test_should_not_create_deworming_for_deceased_pet(service, mock_repo):
     """Do not create a deworming record for a deceased pet"""
-    service = VaccinationService(repository=mock_repo)
     pet = Pet(
         id=4,
         name="Shadow",
@@ -84,47 +90,84 @@ def test_should_not_create_deworming_for_deceased_pet(mock_repo):
     mock_repo.create.assert_not_called()
 
 
-def test_create_missing_pending_vaccinations_for_young_cat(mock_repo):
-    service = VaccinationService(repository=mock_repo)
+def test_create_vaccination_for_young_cat(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=1,
         name="Whiskers",
         birth_date=datetime.now() - timedelta(weeks=6),
         status="ACTIVE",
     )
+    mock_pet_repo.find_pet_type.return_value = "CAT"
     mock_repo.find_pending_vaccination.return_value = None
 
-    service.create_missing_pending_vaccinations_for_cat(pet)
+    service.create_vaccination(pet)
 
     mock_repo.find_pending_vaccination.assert_called_once_with(pet.id, "Deworming")
     mock_repo.create.assert_called_once_with(pet.id, "Deworming", VaccineStatus.PENDING)
 
 
-def test_create_missing_pending_vaccinations_for_older_cat(mock_repo):
-    service = VaccinationService(repository=mock_repo)
+def test_create_vaccination_for_older_cat(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=2,
         name="Mittens",
         birth_date=datetime.now() - timedelta(weeks=12),
         status="ACTIVE",
     )
+    mock_pet_repo.find_pet_type.return_value = "CAT"
     mock_repo.find_pending_vaccination.return_value = None
 
-    service.create_missing_pending_vaccinations_for_cat(pet)
+    service.create_vaccination(pet)
 
     mock_repo.create.assert_any_call(pet.id, "TRICAT", VaccineStatus.PENDING)
     mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
-    assert mock_repo.create.call_count == 2
+    mock_repo.create.assert_any_call(pet.id, "TRICAT_BOOST", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "FeLV", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Rabies", VaccineStatus.PENDING)
+    assert mock_repo.create.call_count == 5
 
 
-def test_should_not_create_existing_pending_vaccinations_for_cat(mock_repo):
-    service = VaccinationService(repository=mock_repo)
+def test_create_vaccination_for_young_dog(service, mock_repo, mock_pet_repo):
+    pet = Pet(
+        id=5,
+        name="Buddy",
+        birth_date=datetime.now() - timedelta(weeks=5),
+        status="ACTIVE",
+    )
+    mock_pet_repo.find_pet_type.return_value = "DOG"
+    mock_repo.find_pending_vaccination.return_value = None
+
+    service.create_vaccination(pet)
+
+    mock_repo.find_pending_vaccination.assert_called_once_with(pet.id, "Deworming")
+    mock_repo.create.assert_called_once_with(pet.id, "Deworming", VaccineStatus.PENDING)
+
+
+def test_create_vaccination_for_older_dog(service, mock_repo, mock_pet_repo):
+    pet = Pet(
+        id=6,
+        name="Rex",
+        birth_date=datetime.now() - timedelta(weeks=12),
+        status="ACTIVE",
+    )
+    mock_pet_repo.find_pet_type.return_value = "DOG"
+    mock_repo.find_pending_vaccination.return_value = None
+
+    service.create_vaccination(pet)
+
+    mock_repo.create.assert_any_call(pet.id, "C6CV", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
+    mock_repo.create.assert_any_call(pet.id, "Rabies", VaccineStatus.PENDING)
+    assert mock_repo.create.call_count == 3
+
+
+def test_should_not_create_existing_pending_vaccinations(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=3,
         name="Luna",
         birth_date=datetime.now() - timedelta(weeks=12),
         status="ACTIVE",
     )
+    mock_pet_repo.find_pet_type.return_value = "CAT"
     mock_repo.find_pending_vaccination.return_value = Vaccination(
         id=1,
         pet_id=pet.id,
@@ -133,6 +176,6 @@ def test_should_not_create_existing_pending_vaccinations_for_cat(mock_repo):
         status="PENDING",
     )
 
-    service.create_missing_pending_vaccinations_for_cat(pet)
+    service.create_vaccination(pet)
 
     mock_repo.create.assert_not_called()

@@ -74,10 +74,3 @@ class CatVaccinationStrategy(VaccinationStrategy):
                 [VaccineType.TRICAT, VaccineType.DEWORMING, VaccineType.RABIES]
             )
         return vaccines
-
-
-class CatPendingVaccinationStrategy(VaccinationStrategy):
-    def get_vaccines(self, weeks_old: int) -> List[VaccineType]:
-        if weeks_old <= 8:
-            return [VaccineType.DEWORMING]
-        return [VaccineType.TRICAT, VaccineType.DEWORMING]
