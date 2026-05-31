@@ -35,14 +35,17 @@ class VaccinationService:
         self.pet_repository = pet_repository
         self.logger = Logger("VaccinationService")
 
+    def _strategy_for_pet_type(self, pet_type: str) -> VaccinationStrategy | None:
+        if pet_type == "DOG":
+            return DogVaccinationStrategy()
+        if pet_type == "CAT":
+            return CatVaccinationStrategy()
+        return None
+
     def vaccinate_pet(
         self, pet_id: int, pet_name: str, birth_date: datetime, pet_type: str
     ):
-        strategy: VaccinationStrategy | None = None
-        if pet_type == "DOG":
-            strategy = DogVaccinationStrategy()
-        elif pet_type == "CAT":
-            strategy = CatVaccinationStrategy()
+        strategy = self._strategy_for_pet_type(pet_type)
 
         if not strategy:
             self.logger.info("No vaccination strategy for pet type: %s", pet_type)
@@ -63,26 +66,22 @@ class VaccinationService:
 
     def create_vaccination(self, pet: Pet):
         pet_type = self.pet_repository.find_pet_type(pet.id)
-        strategy: VaccinationStrategy | None = None
-
-        if pet_type == "DOG":
-            strategy = DogVaccinationStrategy()
-        elif pet_type == "CAT":
-            strategy = CatVaccinationStrategy()
+        strategy = self._strategy_for_pet_type(pet_type) if pet_type else None
 
         if not strategy:
             self.logger.info("No vaccination strategy for pet type: %s", pet_type)
             return
 
-        print(f"Registering vaccination for pet: {pet.name}")
-        now = datetime.now()
-        weeks = (now - pet.birth_date).days / 7
-        print(f"Pet is {int(weeks)} weeks old")
+        self.logger.info("Registering vaccination for pet: %s", pet.name)
+        weeks = int((datetime.now() - pet.birth_date).days / 7)
+        self.logger.info("Pet is %d weeks old", weeks)
 
-        vaccines = strategy.get_vaccines(int(weeks))
+        vaccines = strategy.get_vaccines(weeks)
 
         for vaccine in vaccines:
-            print(f"Generating {vaccine} vaccination")
+            if self.repository.find_pending_vaccination(pet.id, vaccine):
+                continue
+            self.logger.info("Generating %s vaccination", vaccine)
             self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
     def get_pending_dewormings(self, months: int):

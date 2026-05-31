@@ -35,6 +35,16 @@ class VaccinationRepository:
         self.session.refresh(vaccination)
         return vaccination
 
+    def find_pending_vaccination(
+        self, pet_id: int, vaccine_name: str
+    ) -> Vaccination | None:
+        stmt = select(Vaccination).where(
+            (Vaccination.pet_id == pet_id)
+            & (Vaccination.name == vaccine_name)
+            & (Vaccination.status == VaccineStatus.PENDING)
+        )
+        return self.session.exec(stmt).one_or_none()
+
     def find_pending_dewormings(self, months: int) -> Sequence[Vaccination]:
         stmt = select(Vaccination).where(
             (Vaccination.status == VaccineStatus.APPLIED)
