@@ -68,7 +68,7 @@ def test_create_deworming():
 
     pet_id = 1
     vaccine_name = "Deworming"
-    repository.create(pet_id, vaccine_name)
+    repository.create(pet_id, vaccine_name, VaccineStatus.NEW)
 
     session.add.assert_called_once()
     session.commit.assert_called_once()

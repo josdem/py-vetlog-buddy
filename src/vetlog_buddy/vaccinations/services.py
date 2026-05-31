@@ -62,7 +62,7 @@ class VaccinationService:
 
         for vaccine in vaccines:
             self.logger.info("Generating %s vaccination", vaccine)
-            self.repository.create(pet_id, vaccine)
+            self.repository.create(pet_id, vaccine, VaccineStatus.NEW)
 
     def create_vaccination(self, pet: Pet):
         pet_type = self.pet_repository.find_pet_type(pet.id)
@@ -92,4 +92,4 @@ class VaccinationService:
         """Create a deworming record for a pet"""
         if pet.status not in EXCLUDED_STATUSES:
             self.repository.delete_applied_dewormings(pet.id)
-            self.repository.create(pet.id, VaccineType.DEWORMING)
+            self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)

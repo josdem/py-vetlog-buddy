@@ -37,16 +37,11 @@ class DogVaccinationStrategy(VaccinationStrategy):
             vaccines.extend(
                 [
                     VaccineType.PUPPY,
-                    VaccineType.C4CV,
-                    VaccineType.C6CV,
                     VaccineType.DEWORMING,
-                    VaccineType.RABIES,
                 ]
             )
         elif weeks >= 12:
-            vaccines.extend(
-                [VaccineType.C6CV, VaccineType.DEWORMING, VaccineType.RABIES]
-            )
+            vaccines.extend([VaccineType.C6CV, VaccineType.DEWORMING])
         return vaccines
 
 
