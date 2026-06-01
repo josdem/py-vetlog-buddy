@@ -49,23 +49,8 @@ class CatVaccinationStrategy(VaccinationStrategy):
     def get_vaccines(self, weeks_old: int) -> List[VaccineType]:
         vaccines = []
         weeks = weeks_old
-        # Logic from cat_vaccination_strategy.py
-        # ranges: < 9, 9-16, >= 17
-
         if weeks < 9:
             vaccines.append(VaccineType.DEWORMING)
-        elif weeks < 17:
-            vaccines.extend(
-                [
-                    VaccineType.TRICAT,
-                    VaccineType.DEWORMING,
-                    VaccineType.TRICAT_BOOST,
-                    VaccineType.FELV,
-                    VaccineType.RABIES,
-                ]
-            )
-        elif weeks >= 17:
-            vaccines.extend(
-                [VaccineType.TRICAT, VaccineType.DEWORMING, VaccineType.RABIES]
-            )
+        else:
+            vaccines.extend([VaccineType.TRICAT, VaccineType.DEWORMING])
         return vaccines
