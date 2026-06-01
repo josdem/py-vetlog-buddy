@@ -81,8 +81,9 @@ class VaccinationService:
         for vaccine in vaccines:
             if self.repository.find_pending_vaccination(pet.id, vaccine):
                 continue
-            self.logger.info("Generating %s vaccination", vaccine)
-            self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
+            if pet.status not in EXCLUDED_STATUSES:
+                self.logger.info("Generating %s vaccination", vaccine)
+                self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""

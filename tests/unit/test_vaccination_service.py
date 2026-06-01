@@ -108,6 +108,23 @@ def test_create_vaccination_for_dog(service, mock_repo, mock_pet_repo):
     mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
 
 
+def test_not_create_vaccination_for_inactive_pet(service, mock_repo, mock_pet_repo):
+    """Do not create vaccination records for an inactive pet"""
+    mock_pet_repo.find_pet_type.return_value = "DOG"
+    mock_repo.find_pending_vaccination.return_value = None
+    pet = Pet(
+        id=10,
+        name="Rex",
+        birth_date=datetime.now() - timedelta(weeks=8),
+        status="INACTIVE",
+    )
+
+    service.create_vaccination(pet)
+
+    mock_pet_repo.find_pet_type.assert_called_once_with(pet.id)
+    mock_repo.create.assert_not_called()
+
+
 def test_create_vaccination_for_cat(service, mock_repo, mock_pet_repo):
     """Create vaccination records for a cat"""
     mock_pet_repo.find_pet_type.return_value = "CAT"
