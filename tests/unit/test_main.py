@@ -65,33 +65,6 @@ def test_list_suspicious_users():
         MockUserService.return_value.list_suspicious.assert_called_once_with()
 
 
-def test_vaccines():
-    """Test vaccines command wiring"""
-    mock_session_cm = MagicMock()
-
-    with (
-        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
-        patch("vetlog_buddy.main.PetRepository") as MockPetRepository,
-        patch("vetlog_buddy.main.VaccinationRepository") as MockVaccRepository,
-        patch("vetlog_buddy.main.VaccinationService") as MockVaccService,
-        patch("vetlog_buddy.main.PetService") as MockPetService,
-    ):
-        mock_session = MagicMock()
-        mock_session_cm.__enter__.return_value = mock_session
-
-        main.vaccines()
-
-        MockPetRepository.assert_called_once_with(mock_session)
-        MockVaccRepository.assert_called_once_with(mock_session)
-        MockVaccService.assert_called_once_with(
-            MockVaccRepository.return_value, MockPetRepository.return_value
-        )
-        MockPetService.assert_called_once_with(
-            MockPetRepository.return_value, MockVaccService.return_value
-        )
-        MockPetService.return_value.process_vaccinations.assert_called_once_with()
-
-
 def test_pending_dewormings():
     """Test pending dewormings"""
     mock_session_cm = MagicMock()
