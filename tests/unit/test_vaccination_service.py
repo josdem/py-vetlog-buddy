@@ -108,7 +108,7 @@ def test_create_vaccination_for_dog(service, mock_repo, mock_pet_repo):
     mock_repo.create.assert_any_call(pet.id, "Deworming", VaccineStatus.PENDING)
 
 
-def test_not_create_vaccination_for_inactive_pet(service, mock_repo, mock_pet_repo):
+def test_should_not_create_vaccination_for_inactive_pet(service, mock_repo, mock_pet_repo):
     """Do not create vaccination records for an inactive pet"""
     mock_pet_repo.find_pet_type.return_value = "DOG"
     mock_repo.find_pending_vaccination.return_value = None
