@@ -45,7 +45,7 @@ uv run remove_invalid
 # List suspicious users
 uv run list_suspicious
 
-# Create deworming vaccination records
+# Create deworming records
 uv run dewormings
 ```
 
