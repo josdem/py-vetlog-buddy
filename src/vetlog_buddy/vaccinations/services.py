@@ -73,6 +73,9 @@ class VaccinationService:
             return
 
         self.logger.info("Registering vaccination for pet: %s", pet.name)
+        if pet.status in EXCLUDED_STATUSES:
+            return
+
         weeks = int((datetime.now() - pet.birth_date).days / 7)
         self.logger.info("Pet is %d weeks old", weeks)
 
@@ -81,9 +84,8 @@ class VaccinationService:
         for vaccine in vaccines:
             if self.repository.find_pending_vaccination(pet.id, vaccine):
                 continue
-            if pet.status not in EXCLUDED_STATUSES:
-                self.logger.info("Generating %s vaccination", vaccine)
-                self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
+            self.logger.info("Generating %s vaccination", vaccine)
+            self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""
