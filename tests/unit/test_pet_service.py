@@ -10,16 +10,6 @@ def mock_repo():
     return MagicMock()
 
 
-@pytest.fixture
-def mock_vacc_service():
-    return MagicMock()
-
-
-@pytest.fixture
-def pet_service(mock_repo, mock_vacc_service):
-    return PetService(mock_repo, mock_vacc_service)
-
-
 def test_get_pet_by_id(mock_repo):
     """Get pet by id"""
     service = PetService(repository=mock_repo, vaccination_service=MagicMock())
