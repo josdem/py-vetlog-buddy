@@ -1,6 +1,6 @@
 [project]
 name = "vetlog-buddy"
-version = "1.5.2"
+version = "1.5.3"
 description = "MySQL database analyzer for Vetlog"
 readme = "README.md"
 requires-python = ">=3.12"

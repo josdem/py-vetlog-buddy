@@ -73,6 +73,9 @@ class VaccinationService:
             return
 
         self.logger.info("Registering vaccination for pet: %s", pet.name)
+        if pet.status in EXCLUDED_STATUSES:
+            return
+
         weeks = int((datetime.now() - pet.birth_date).days / 7)
         self.logger.info("Pet is %d weeks old", weeks)
 
