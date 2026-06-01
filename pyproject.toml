@@ -25,7 +25,6 @@ dependencies = [
 [project.scripts]
 list_suspicious = "vetlog_buddy.main:list_suspicious_users"
 remove_invalid = "vetlog_buddy.main:remove_invalid_users"
-vaccines = "vetlog_buddy.main:vaccines"
 dewormings = "vetlog_buddy.main:dewormings"
 version = "vetlog_buddy.main:version_check"
 
