@@ -71,7 +71,7 @@ class VaccinationService:
                 self.logger.info(
                     "Pet already has a pending %s vaccination, skipping", vaccine
                 )
-                continue
+                break
             self.logger.info("Generating %s vaccination", vaccine)
             self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
