@@ -55,7 +55,10 @@ class VaccinationService:
             return
 
         now = datetime.now().date()
-        days = (now - pet.birth_date).days
+        birth_date = (
+            pet.birth_date.date() if isinstance(pet.birth_date, datetime) else pet.birth_date
+        )
+        days = (now - birth_date).days
         weeks = days // 7
         self.logger.info("Pet is %d weeks old", weeks)
 
