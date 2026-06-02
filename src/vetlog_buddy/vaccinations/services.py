@@ -54,7 +54,9 @@ class VaccinationService:
         if pet.status in EXCLUDED_STATUSES:
             return
 
-        weeks = int((datetime.now() - pet.birth_date).days / 7)
+        now = datetime.now().date()
+        days = (now - pet.birth_date).days
+        weeks = days // 7
         self.logger.info("Pet is %d weeks old", weeks)
 
         vaccines = strategy.get_vaccines(weeks)

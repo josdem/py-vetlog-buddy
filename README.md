@@ -46,7 +46,7 @@ uv run remove_invalid
 uv run list_suspicious
 
 # Create vaccination records
-uv run vaccine --id {pet_id}
+uv run vaccines --id {pet_id}
 
 # Create deworming records
 uv run dewormings
