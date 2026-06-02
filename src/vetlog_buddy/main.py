@@ -86,7 +86,8 @@ def vaccinations_cli():
     parser.add_argument(
         "--id",
         type=int,
-        help="ID of the vaccination",
+        required=True,
+        help="Pet ID to create vaccination records for",
     )
     args = parser.parse_args()
     vaccines(id=args.id)
