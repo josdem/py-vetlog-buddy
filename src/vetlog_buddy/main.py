@@ -46,11 +46,14 @@ def vaccines(id: int | None = None):
         pet_repo = PetRepository(session)
         vacc_repo = VaccinationRepository(session)
         vacc_service = VaccinationService(vacc_repo, pet_repo)
-        pet = pet_repo.find_by_id(id) if id else None
-        if pet:
-            vacc_service.create_vaccination(pet)
-        else:
+        if id is None:
             print("No pet ID provided, skipping vaccination creation")
+            return
+        pet = pet_repo.find_by_id(id)
+        if not pet:
+            print(f"No pet found with ID: {id}")
+            return
+        vacc_service.create_vaccination(pet)
 
 
 def dewormings():
