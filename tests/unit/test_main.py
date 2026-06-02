@@ -78,7 +78,7 @@ def test_vaccines():
         mock_session = MagicMock()
         mock_session_cm.__enter__.return_value = mock_session
 
-        main.vaccines(pet_id=1)
+        main.vaccines(id=1)
 
         MockPetRepository.assert_called_once_with(mock_session)
         MockVaccinationRepository.assert_called_once_with(mock_session)
