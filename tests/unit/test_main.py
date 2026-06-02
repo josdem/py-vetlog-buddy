@@ -90,12 +90,13 @@ def test_vaccines():
             MockPetRepository.return_value.find_by_id.return_value
         )
 
+
 def test_vaccination_cli():
     """Test vaccinations CLI command wiring"""
     mock_session_cm = MagicMock()
 
     with (
-        patch('sys.argv', ['app.py', '--id', '1']),
+        patch("sys.argv", ["app.py", "--id", "1"]),
         patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
         patch("vetlog_buddy.main.PetRepository") as MockPetRepository,
         patch("vetlog_buddy.main.VaccinationRepository") as MockVaccinationRepository,

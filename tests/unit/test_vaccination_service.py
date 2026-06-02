@@ -97,7 +97,7 @@ def test_create_vaccination_for_dog(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=5,
         name="Rex",
-        birth_date=datetime.now().date() - timedelta(weeks=8),
+        birth_date=datetime.now() - timedelta(weeks=8),
         status="ACTIVE",
     )
 
@@ -153,7 +153,7 @@ def test_create_vaccination_for_cat(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=6,
         name="Mittens",
-        birth_date=datetime.now().date() - timedelta(weeks=10),
+        birth_date=datetime.now() - timedelta(weeks=10),
         status="OWNED",
     )
 
@@ -168,7 +168,7 @@ def test_create_vaccination_for_young_cat(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=1,
         name="Whiskers",
-        birth_date=datetime.now().date() - timedelta(weeks=6),
+        birth_date=datetime.now() - timedelta(weeks=6),
         status="OWNED",
     )
     mock_pet_repo.find_pet_type.return_value = "CAT"
@@ -184,7 +184,7 @@ def test_create_vaccination_for_young_dog(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=7,
         name="Buddy",
-        birth_date=datetime.now().date() - timedelta(weeks=5),
+        birth_date=datetime.now() - timedelta(weeks=5),
         status="OWNED",
     )
     mock_pet_repo.find_pet_type.return_value = "DOG"
@@ -200,7 +200,7 @@ def test_create_vaccination_for_older_dog(service, mock_repo, mock_pet_repo):
     pet = Pet(
         id=8,
         name="Max",
-        birth_date=datetime.now().date() - timedelta(weeks=12),
+        birth_date=datetime.now() - timedelta(weeks=12),
         status="OWNED",
     )
     mock_pet_repo.find_pet_type.return_value = "DOG"
@@ -237,7 +237,7 @@ def test_should_not_create_existing_pending_vaccinations(
     pet = Pet(
         id=3,
         name="Luna",
-        birth_date=datetime.now().date() - timedelta(weeks=12),
+        birth_date=datetime.now() - timedelta(weeks=12),
         status="OWNED",
     )
     mock_pet_repo.find_pet_type.return_value = "CAT"

@@ -56,7 +56,9 @@ class VaccinationService:
 
         now = datetime.now().date()
         birth_date = (
-            pet.birth_date.date() if isinstance(pet.birth_date, datetime) else pet.birth_date
+            pet.birth_date.date()
+            if isinstance(pet.birth_date, datetime)
+            else pet.birth_date
         )
         days = (now - birth_date).days
         weeks = days // 7
