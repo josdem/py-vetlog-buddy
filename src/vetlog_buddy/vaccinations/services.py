@@ -54,14 +54,24 @@ class VaccinationService:
         if pet.status in EXCLUDED_STATUSES:
             return
 
-        weeks = int((datetime.now() - pet.birth_date).days / 7)
+        now = datetime.now().date()
+        birth_date = (
+            pet.birth_date.date()
+            if isinstance(pet.birth_date, datetime)
+            else pet.birth_date
+        )
+        days = (now - birth_date).days
+        weeks = days // 7
         self.logger.info("Pet is %d weeks old", weeks)
 
         vaccines = strategy.get_vaccines(weeks)
 
         for vaccine in vaccines:
             if self.repository.find_pending_vaccination(pet.id, vaccine):
-                continue
+                self.logger.info(
+                    "Pet already has a pending %s vaccination, skipping", vaccine
+                )
+                break
             self.logger.info("Generating %s vaccination", vaccine)
             self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
