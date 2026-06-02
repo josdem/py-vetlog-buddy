@@ -90,6 +90,32 @@ def test_vaccines():
             MockPetRepository.return_value.find_by_id.return_value
         )
 
+def test_vaccination_cli():
+    """Test vaccinations CLI command wiring"""
+    mock_session_cm = MagicMock()
+
+    with (
+        patch('sys.argv', ['app.py', '--id', '1']),
+        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
+        patch("vetlog_buddy.main.PetRepository") as MockPetRepository,
+        patch("vetlog_buddy.main.VaccinationRepository") as MockVaccinationRepository,
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccinationService,
+    ):
+        mock_session = MagicMock()
+        mock_session_cm.__enter__.return_value = mock_session
+
+        main.vaccinations_cli()
+
+        MockPetRepository.assert_called_once_with(mock_session)
+        MockVaccinationRepository.assert_called_once_with(mock_session)
+        MockVaccinationService.assert_called_once_with(
+            MockVaccinationRepository.return_value, MockPetRepository.return_value
+        )
+        MockPetRepository.return_value.find_by_id.assert_called_once_with(1)
+        MockVaccinationService.return_value.create_vaccination.assert_called_once_with(
+            MockPetRepository.return_value.find_by_id.return_value
+        )
+
 
 def test_pending_dewormings():
     """Test pending dewormings"""
