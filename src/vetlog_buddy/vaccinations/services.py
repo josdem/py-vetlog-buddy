@@ -50,7 +50,7 @@ class VaccinationService:
             self.logger.info("No vaccination strategy for pet type: %s", pet_type)
             return
 
-        self.logger.info("Registering vaccination for pet: %s", pet.name)
+        self.logger.info("Registering vaccinations for pet: %s", pet.name)
         if pet.status in EXCLUDED_STATUSES:
             return
 
