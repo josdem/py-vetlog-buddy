@@ -42,28 +42,6 @@ class VaccinationService:
             return CatVaccinationStrategy()
         return None
 
-    def vaccinate_pet(
-        self, pet_id: int, pet_name: str, birth_date: datetime, pet_type: str
-    ):
-        strategy = self._strategy_for_pet_type(pet_type)
-
-        if not strategy:
-            self.logger.info("No vaccination strategy for pet type: %s", pet_type)
-            return
-
-        self.logger.info("Registering vaccination for pet: %s", pet_name)
-        now = datetime.now()
-        # Ensure birth_date is datetime. If tuple from raw sql, it might be datetime or str?
-        # Assuming datetime object based on typical connector behavior.
-        weeks = (now - birth_date).days / 7
-        self.logger.info("Pet is %d weeks old", int(weeks))
-
-        vaccines = strategy.get_vaccines(int(weeks))
-
-        for vaccine in vaccines:
-            self.logger.info("Generating %s vaccination", vaccine)
-            self.repository.create(pet_id, vaccine, VaccineStatus.NEW)
-
     def create_vaccination(self, pet: Pet):
         pet_type = self.pet_repository.find_pet_type(pet.id)
         strategy = self._strategy_for_pet_type(pet_type) if pet_type else None

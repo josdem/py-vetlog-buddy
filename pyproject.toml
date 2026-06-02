@@ -1,6 +1,6 @@
 [project]
 name = "vetlog-buddy"
-version = "1.5.3"
+version = "1.5.4"
 description = "MySQL database analyzer for Vetlog"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -25,7 +25,6 @@ dependencies = [
 [project.scripts]
 list_suspicious = "vetlog_buddy.main:list_suspicious_users"
 remove_invalid = "vetlog_buddy.main:remove_invalid_users"
-vaccines = "vetlog_buddy.main:vaccines"
 dewormings = "vetlog_buddy.main:dewormings"
 version = "vetlog_buddy.main:version_check"
 

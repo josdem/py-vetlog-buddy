@@ -39,15 +39,6 @@ def list_suspicious_users():
         service.list_suspicious()
 
 
-def vaccines():
-    with get_session() as session:
-        pet_repo = PetRepository(session)
-        vacc_repo = VaccinationRepository(session)
-        vacc_service = VaccinationService(vacc_repo, pet_repo)
-        pet_service = PetService(pet_repo, vacc_service)
-        pet_service.process_vaccinations()
-
-
 def dewormings():
     with get_session() as session:
         pet_repo = PetRepository(session)
