@@ -61,6 +61,9 @@ class VaccinationService:
 
         for vaccine in vaccines:
             if self.repository.find_pending_vaccination(pet.id, vaccine):
+                self.logger.info(
+                    "Pet already has a pending %s vaccination, skipping", vaccine
+                )
                 continue
             self.logger.info("Generating %s vaccination", vaccine)
             self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)

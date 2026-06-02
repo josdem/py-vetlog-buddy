@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License
 
+import argparse
+
 from vetlog_buddy.shared.database import get_session
 from vetlog_buddy.users.repository import UserRepository
 from vetlog_buddy.users.services import UserService
@@ -39,6 +41,18 @@ def list_suspicious_users():
         service.list_suspicious()
 
 
+def vaccines(pet_id: int | None = None):
+    with get_session() as session:
+        pet_repo = PetRepository(session)
+        vacc_repo = VaccinationRepository(session)
+        vacc_service = VaccinationService(vacc_repo, pet_repo)
+        pet = pet_repo.find_by_id(pet_id) if pet_id else None
+        if pet:
+            vacc_service.create_vaccination(pet)
+        else:
+            print("No pet ID provided, skipping vaccination creation")
+
+
 def dewormings():
     with get_session() as session:
         pet_repo = PetRepository(session)
@@ -61,6 +75,18 @@ def dewormings():
             pet = pet_service.get_by_id(deworming.pet_id)
             vacc_service.create_deworming(pet)
             print(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
+
+
+def vaccinations_cli():
+    """CLI entry point for create vaccinations"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--id",
+        type=int,
+        help="ID of the vaccination",
+    )
+    args = parser.parse_args()
+    vaccines(id=args.id)
 
 
 def version_check():
