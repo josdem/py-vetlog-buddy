@@ -14,6 +14,7 @@
 
 import argparse
 
+from vetlog_buddy.shared.logger import Logger
 from vetlog_buddy.shared.database import get_session
 from vetlog_buddy.users.repository import UserRepository
 from vetlog_buddy.users.services import UserService
@@ -23,6 +24,9 @@ from vetlog_buddy.vaccinations.repository import VaccinationRepository
 from vetlog_buddy.vaccinations.services import VaccinationService
 
 from . import __project__, __version__
+
+
+logger = Logger("Main")
 
 
 def remove_invalid_users():
@@ -47,11 +51,11 @@ def vaccines(id: int | None = None):
         vacc_repo = VaccinationRepository(session)
         vacc_service = VaccinationService(vacc_repo, pet_repo)
         if id is None:
-            print("No pet ID provided, skipping vaccination creation")
+            logger.info("No pet ID provided, skipping vaccination creation")
             return
         pet = pet_repo.find_by_id(id)
         if not pet:
-            print(f"No pet found with ID: {id}")
+            logger.info(f"No pet found with ID: {id}")
             return
         vacc_service.create_vaccination(pet)
 
@@ -73,11 +77,11 @@ def dewormings():
                     required_dewormings.append(deworming)
                     required_pet_ids.add(deworming.pet_id)
 
-        print(f"Found {len(required_dewormings)} pending dewormings")
+        logger.info(f"Found {len(required_dewormings)} pending dewormings")
         for deworming in required_dewormings:
             pet = pet_service.get_by_id(deworming.pet_id)
             vacc_service.create_deworming(pet)
-            print(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
+            logger.info(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
 
 
 def vaccinations_cli():
