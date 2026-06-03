@@ -80,6 +80,8 @@ def dewormings():
         logger.info("Found %d pending dewormings", len(required_dewormings))
         for deworming in required_dewormings:
             pet = pet_service.get_by_id(deworming.pet_id)
+            if pet is None:
+                continue
             vacc_service.create_deworming(pet)
             logger.info(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
 
