@@ -55,7 +55,7 @@ def vaccines(id: int | None = None):
             return
         pet = pet_repo.find_by_id(id)
         if not pet:
-            logger.info(f"No pet found with ID: {id}")
+            logger.info("No pet found with ID: %d", id)
             return
         vacc_service.create_vaccination(pet)
 
