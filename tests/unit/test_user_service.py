@@ -96,3 +96,37 @@ def test_get_by_id():
     result = service.get_by_id(1)
     assert result == user
     mock_repo.find_by_id.assert_called_once_with(1)
+
+
+def test_remove_invalid_logs_removed_count():
+    """Remove invalid users and log the removed count"""
+    mock_repo = MagicMock()
+    invalid_user = User(username="Max")
+    valid_user = User(username="josdem")
+    mock_repo.get_all.return_value = [invalid_user, valid_user]
+    service = UserService(repo=mock_repo)
+    service.logger = MagicMock()
+
+    result = service.remove_invalid()
+
+    assert result == 1
+    mock_repo.delete.assert_called_once_with(invalid_user)
+    service.logger.info.assert_called_once_with("Removed %d invalid users", 1)
+
+
+def test_list_suspicious_logs_each_user_and_total():
+    """List suspicious users and log detail plus total count"""
+    mock_repo = MagicMock()
+    suspicious_user = User(username="PvbGzTHuyk")
+    normal_user = User(username="josdem")
+    mock_repo.get_all.return_value = [suspicious_user, normal_user]
+    service = UserService(repo=mock_repo)
+    service.logger = MagicMock()
+
+    result = service.list_suspicious()
+
+    assert result == [suspicious_user]
+    service.logger.info.assert_any_call(
+        "Suspicious user: PvbGzTHuyk (min_ratio: 0.2, max_ratio: 0.5, actual_ratio: 0.4)"
+    )
+    service.logger.info.assert_any_call("Found %d suspicious users", 1)
