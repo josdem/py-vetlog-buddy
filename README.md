@@ -1,7 +1,7 @@
 # 🐍 Vetlog Buddy
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Setup
@@ -113,6 +113,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/RounakSharma2005"><img src="https://avatars.githubusercontent.com/u/184821776?v=4?s=100" width="100px;" alt="RounakSharma2005"/><br /><sub><b>RounakSharma2005</b></sub></a><br /><a href="https://github.com/josdem/py-vetlog-buddy/commits?author=RounakSharma2005" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Hoshtoo"><img src="https://avatars.githubusercontent.com/u/104015743?v=4?s=100" width="100px;" alt="Hoshtoo"/><br /><sub><b>Hoshtoo</b></sub></a><br /><a href="https://github.com/josdem/py-vetlog-buddy/commits?author=Hoshtoo" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/githubuser16384"><img src="https://avatars.githubusercontent.com/u/117111471?v=4?s=100" width="100px;" alt="githubuser16384"/><br /><sub><b>githubuser16384</b></sub></a><br /><a href="#infra-githubuser16384" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KushagraBinwani"><img src="https://avatars.githubusercontent.com/u/175931921?v=4?s=100" width="100px;" alt="KushagraBinwani"/><br /><sub><b>KushagraBinwani</b></sub></a><br /><a href="#infra-KushagraBinwani" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     </tr>
   </tbody>
 </table>
