@@ -601,12 +601,17 @@ dependencies = [
     { name = "mysql-connector-python" },
     { name = "pydantic-settings" },
     { name = "pymysql" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
+    { name = "python-dotenv" },
     { name = "sqlalchemy" },
     { name = "sqlmodel" },
     { name = "testcontainers" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
@@ -615,13 +620,15 @@ requires-dist = [
     { name = "mysql-connector-python", specifier = ">=9.7.0" },
     { name = "pydantic-settings", specifier = ">=2.14.1" },
     { name = "pymysql", specifier = ">=1.2.0" },
-    { name = "pytest", specifier = ">=9.0.3" },
-    { name = "pytest-cov", specifier = ">=7.1.0" },
-    { name = "ruff", specifier = ">=0.15.15" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.3" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=7.1.0" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.15" },
     { name = "sqlalchemy", specifier = ">=2.0.50" },
     { name = "sqlmodel", specifier = ">=0.0.38" },
     { name = "testcontainers", specifier = ">=4.14.2" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "wrapt"
