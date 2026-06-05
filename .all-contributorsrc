@@ -127,6 +127,15 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "saurabhhhcodes",
+      "name": "Saurabh Kumar Bajpai",
+      "avatar_url": "https://avatars.githubusercontent.com/u/157192462?v=4",
+      "profile": "https://saurabhbajpai03.netlify.app/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
