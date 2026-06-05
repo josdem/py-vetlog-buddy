@@ -100,18 +100,23 @@ def test_get_by_id():
 
 def test_remove_invalid_logs_removed_count():
     """Remove invalid users and log the removed count"""
+    from unittest.mock import patch
+
     mock_repo = MagicMock()
     invalid_user = User(username="Max")
     valid_user = User(username="josdem")
     mock_repo.get_all.return_value = [invalid_user, valid_user]
-    service = UserService(repo=mock_repo)
-    service.logger = MagicMock()
 
-    result = service.remove_invalid()
+    logger_mock = MagicMock()
+    with patch("vetlog_buddy.users.services.Logger", return_value=logger_mock) as LoggerCls:
+        service = UserService(repo=mock_repo)
+        LoggerCls.assert_called_once_with("UserService")
+
+        result = service.remove_invalid()
 
     assert result == 1
     mock_repo.delete.assert_called_once_with(invalid_user)
-    service.logger.info.assert_called_once_with("Removed %d invalid users", 1)
+    logger_mock.info.assert_called_once_with("Removed %d invalid users", 1)
 
 
 def test_list_suspicious_logs_each_user_and_total():
