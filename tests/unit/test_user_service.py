@@ -132,6 +132,10 @@ def test_list_suspicious_logs_each_user_and_total():
 
     assert result == [suspicious_user]
     service.logger.info.assert_any_call(
-        "Suspicious user: PvbGzTHuyk (min_ratio: 0.2, max_ratio: 0.5, actual_ratio: 0.4)"
+        "Suspicious user: %s (min_ratio: %s, max_ratio: %s, actual_ratio: %s)",
+        "PvbGzTHuyk",
+        0.2,
+        0.5,
+        0.4,
     )
     service.logger.info.assert_any_call("Found %d suspicious users", 1)
