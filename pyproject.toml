@@ -8,18 +8,20 @@ license = { text = "Apache 2.0" }
 authors = [{ name = "Jose Morales", email = "contact@josdem.io" }]
 dependencies = [
   "coverage>=7.14.1",
-  "cryptography>=48.0.0",
   "mysql-connector-python>=9.7.0",
   "pydantic-settings>=2.14.1",
   "pymysql>=1.2.0",
-  "pysqlmodel>=1.2.0",
-  "pytest>=9.0.3",
-  "pytest-cov>=7.1.0",
   "python-dotenv>=1.2.2",
-  "ruff>=0.15.15",
   "sqlalchemy>=2.0.50",
   "sqlmodel>=0.0.38",
   "testcontainers>=4.14.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9.0.3",
+  "ruff>=0.15.15",
+  "pytest-cov>=7.1.0",
 ]
 
 [project.scripts]

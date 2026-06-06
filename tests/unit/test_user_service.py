@@ -108,6 +108,7 @@ def test_remove_invalid_logs_removed_count():
     mock_repo.get_all.return_value = [invalid_user, valid_user]
 
     logger_mock = MagicMock()
+    
     with patch("vetlog_buddy.users.services.Logger", return_value=logger_mock) as LoggerCls:
         service = UserService(repo=mock_repo)
         LoggerCls.assert_called_once_with("UserService")
