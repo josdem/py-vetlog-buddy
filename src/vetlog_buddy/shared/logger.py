@@ -22,9 +22,10 @@ class Logger:
         self.formatter = logging.Formatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
-        self.console_handler = logging.StreamHandler()
-        self.console_handler.setFormatter(self.formatter)
-        self.log.addHandler(self.console_handler)
+        if not self.log.handlers:
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(self.formatter)
+            self.log.addHandler(console_handler)
 
     def info(self, message, args=None):
         self.log.info(message) if args is None else self.log.info(message, args)
