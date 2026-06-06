@@ -46,7 +46,11 @@ class UserService:
         suspicious_users = [u for u in all_users if self.is_suspicious(u)]
         for user in suspicious_users:
             self.logger.info(
-                f"Suspicious user: {user.username} (min_ratio: {0.2}, max_ratio: {self.factor}, actual_ratio: {self.get_uppercase_ratio(user.username)})"
+                "Suspicious user: %s (min_ratio: %s, max_ratio: %s, actual_ratio: %s)",
+                user.username,
+                0.2,
+                self.factor,
+                self.get_uppercase_ratio(user.username),
             )
         count = len(suspicious_users)
         self.logger.info("Found %d suspicious users", count)
