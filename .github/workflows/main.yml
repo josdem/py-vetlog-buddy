@@ -33,7 +33,7 @@ jobs:
       - name: Install with uv
         run: |
           pip install uv
-          uv sync
+          uv sync --extra dev
 
       - name: Format with ruff
         run: |
