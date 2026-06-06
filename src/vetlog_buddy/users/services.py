@@ -1,11 +1,13 @@
 from vetlog_buddy.users.repository import UserRepository
 from vetlog_buddy.users.model import User
+from vetlog_buddy.shared.logger import Logger
 
 
 class UserService:
     def __init__(self, repo: UserRepository, factor: float = 0.5) -> None:
         self.repo = repo
         self.factor = factor
+        self.logger = Logger("UserService")
 
     def is_invalid(self, user) -> bool:
         """Check if user is invalid using logic from filter_username"""
@@ -31,7 +33,7 @@ class UserService:
         for user in invalid_users:
             self.repo.delete(user)
             count += 1
-        print(f"Removed {count} invalid users")
+        self.logger.info("Removed %d invalid users", count)
         return count
 
     def is_suspicious(self, user) -> bool:
@@ -43,11 +45,11 @@ class UserService:
         all_users = self.repo.get_all()
         suspicious_users = [u for u in all_users if self.is_suspicious(u)]
         for user in suspicious_users:
-            print(
+            self.logger.info(
                 f"Suspicious user: {user.username} (min_ratio: {0.2}, max_ratio: {self.factor}, actual_ratio: {self.get_uppercase_ratio(user.username)})"
             )
         count = len(suspicious_users)
-        print(f"Found {count} suspicious users")
+        self.logger.info("Found %d suspicious users", count)
         return suspicious_users
 
     def get_uppercase_ratio(self, username: str) -> float:
