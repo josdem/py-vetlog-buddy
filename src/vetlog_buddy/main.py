@@ -83,7 +83,9 @@ def dewormings():
             if pet is None:
                 continue
             vacc_service.create_deworming(pet)
-            logger.info(f"Pet {pet.name} (ID: {pet.id}) requires deworming")
+            logger.info(
+                f"Pet {pet.name} (ID: {pet.id}) Status: {pet.status} evaluated for deworming"
+            )
 
 
 def vaccinations_cli():
