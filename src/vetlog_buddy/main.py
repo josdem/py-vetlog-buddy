@@ -84,7 +84,7 @@ def dewormings():
                 continue
             vacc_service.create_deworming(pet)
             logger.info(
-                f"Pet {pet.name} (ID: {pet.id}) Status: {pet.status} evaluated for deworming"
+                f"Pet {pet.name} (ID: {pet.id}) {pet.status} evaluated for deworming"
             )
 
 
