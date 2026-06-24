@@ -81,6 +81,5 @@ class VaccinationService:
 
     def create_deworming(self, pet: Pet):
         """Create a deworming record for a pet"""
-        if pet.status not in EXCLUDED_STATUSES:
-            self.repository.delete_applied_dewormings(pet.id)
-            self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
+        self.repository.delete_applied_dewormings(pet.id)
+        self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)

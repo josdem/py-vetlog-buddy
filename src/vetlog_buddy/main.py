@@ -27,6 +27,7 @@ from . import __project__, __version__
 
 
 logger = Logger("Main")
+EXCLUDED_STATUSES = frozenset({"INACTIVE", "DECEASED"})
 
 
 def remove_invalid_users():
@@ -80,12 +81,10 @@ def dewormings():
         logger.info("Found %d pending dewormings", len(required_dewormings))
         for deworming in required_dewormings:
             pet = pet_service.get_by_id(deworming.pet_id)
-            if pet is None:
+            if pet is None or pet.status in EXCLUDED_STATUSES:
                 continue
             vacc_service.create_deworming(pet)
-            logger.info(
-                f"Pet {pet.name} (ID: {pet.id}) {pet.status} evaluated for deworming"
-            )
+            logger.info(f"Pet {pet.name} (ID: {pet.id}) needs deworming")
 
 
 def vaccinations_cli():
