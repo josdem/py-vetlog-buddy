@@ -78,7 +78,9 @@ def dewormings():
                     required_dewormings.append(deworming)
                     required_pet_ids.add(deworming.pet_id)
 
-        logger.info("Found %d pending dewormings", len(required_dewormings))
+        if not required_dewormings:
+            logger.info("No pending dewormings found")
+            return
         for deworming in required_dewormings:
             pet = pet_service.get_by_id(deworming.pet_id)
             if pet is None or pet.status in EXCLUDED_STATUSES:
