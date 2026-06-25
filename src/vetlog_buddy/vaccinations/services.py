@@ -77,10 +77,14 @@ class VaccinationService:
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""
-        return self.repository.find_pending_dewormings(months)
+        return [
+            deworming
+            for deworming in self.repository.find_pending_dewormings(months)
+            if (pet := self.pet_repository.find_by_id(deworming.pet_id)) is not None
+            and pet.status not in EXCLUDED_STATUSES
+        ]
 
     def create_deworming(self, pet: Pet):
         """Create a deworming record for a pet"""
-        if pet.status not in EXCLUDED_STATUSES:
-            self.repository.delete_applied_dewormings(pet.id)
-            self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
+        self.repository.delete_applied_dewormings(pet.id)
+        self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
