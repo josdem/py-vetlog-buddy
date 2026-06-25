@@ -151,6 +151,44 @@ def test_pending_dewormings():
         assert mock_vacc_service.create_deworming.call_count == 2
 
 
+def test_pending_dewormings_with_excluded_status():
+    """Test pending dewormings with pets having excluded statuses"""
+    mock_session_cm = MagicMock()
+
+    with (
+        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccService,
+        patch("vetlog_buddy.main.PetService") as MockPetService,
+    ):
+        mock_session = MagicMock()
+        mock_session_cm.__enter__.return_value = mock_session
+
+        mock_vacc_service = MockVaccService.return_value
+        mock_pet_service = MockPetService.return_value
+
+        # Setup the vaccination service to return pending dewormings
+        mock_vacc_service.get_pending_dewormings.return_value = [
+            MagicMock(pet_id=1),
+            MagicMock(pet_id=2),
+        ]
+
+        # Setup the pet service to return pet details with one having an excluded status
+        def get_by_id_side_effect(pet_id):
+            if pet_id == 1:
+                return MagicMock(name="Pet1", id=1, status="INACTIVE")
+            else:
+                return MagicMock(name="Pet2", id=2, status="ACTIVE")
+
+        mock_pet_service.get_by_id.side_effect = get_by_id_side_effect
+
+        main.dewormings()
+
+        # Assertions to ensure the correct calls were made
+        assert mock_pet_service.get_by_id.call_count == 2
+        # Only one deworming should be created for the active pet
+        assert mock_vacc_service.create_deworming.call_count == 1
+
+
 def test_list_dewormings_no_duplicate_events_when_pet_in_both_lists():
     """No duplicate calendar event when a pet appears in both the 12-month and 6-month required lists"""
 

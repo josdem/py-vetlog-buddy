@@ -66,30 +66,6 @@ def test_create_deworming(service, mock_repo):
     mock_repo.create.assert_called_once_with(pet.id, "Deworming", VaccineStatus.NEW)
 
 
-def test_should_not_create_deworming_for_inactive_pet(service, mock_repo):
-    """Do not create a deworming record for an inactive pet"""
-    pet = Pet(
-        id=3,
-        name="Whiskers",
-        birth_date=datetime(2019, 6, 1),
-        status="INACTIVE",
-    )
-    service.create_deworming(pet)
-    mock_repo.create.assert_not_called()
-
-
-def test_should_not_create_deworming_for_deceased_pet(service, mock_repo):
-    """Do not create a deworming record for a deceased pet"""
-    pet = Pet(
-        id=4,
-        name="Shadow",
-        birth_date=datetime(2018, 3, 15),
-        status="DECEASED",
-    )
-    service.create_deworming(pet)
-    mock_repo.create.assert_not_called()
-
-
 def test_create_vaccination_for_dog(service, mock_repo, mock_pet_repo):
     """Create vaccination records for a dog"""
     mock_pet_repo.find_pet_type.return_value = "DOG"
