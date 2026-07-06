@@ -66,3 +66,11 @@ class VaccinationRepository:
             self.session.delete(vaccination)
 
         self.session.commit()
+
+    def find_rabies_vaccines_by_month(self, year: int) -> Sequence[datetime]:
+        stmt = select(Vaccination.date).where(
+            (Vaccination.status == VaccineStatus.APPLIED)
+            & (Vaccination.name == "Rabies")
+            & (Vaccination.date.like(f"{year}-%"))
+        )
+        return self.session.exec(stmt).all()
