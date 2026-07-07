@@ -29,9 +29,11 @@ EXCLUDED_STATUSES = frozenset({"INACTIVE", "DECEASED"})
 
 class VaccinationService:
     def __init__(
-        self, repository: VaccinationRepository, pet_repository: PetRepository
+        self,
+        vaccinationRepository: VaccinationRepository,
+        pet_repository: PetRepository | None = None,
     ):
-        self.repository = repository
+        self.vaccinationRepository = vaccinationRepository
         self.pet_repository = pet_repository
         self.logger = Logger("VaccinationService")
 
@@ -67,17 +69,17 @@ class VaccinationService:
         vaccines = strategy.get_vaccines(weeks)
 
         for vaccine in vaccines:
-            if self.repository.find_pending_vaccination(pet.id, vaccine):
+            if self.vaccinationRepository.find_pending_vaccination(pet.id, vaccine):
                 self.logger.info(
                     "Pet already has a pending %s vaccination, skipping", vaccine
                 )
                 break
             self.logger.info("Generating %s vaccination", vaccine)
-            self.repository.create(pet.id, vaccine, VaccineStatus.PENDING)
+            self.vaccinationRepository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""
-        return self.repository.find_pending_dewormings(months)
+        return self.vaccinationRepository.find_pending_dewormings(months)
 
     def get_rabies_vaccines_by_month(self, year: int) -> dict:
         """
@@ -86,7 +88,7 @@ class VaccinationService:
         """
         monthly_counts = {f"{i:02d}": 0 for i in range(1, 13)}
         
-        results = self.repository.find_rabies_vaccines_by_month(year)
+        results = self.vaccinationRepository.find_rabies_vaccines_by_month(year)
         
         for date_obj in results:
             # Assuming date_obj is a datetime object or string. Adjust extraction if needed:
@@ -99,5 +101,5 @@ class VaccinationService:
 
     def create_deworming(self, pet: Pet):
         """Create a deworming record for a pet"""
-        self.repository.delete_applied_dewormings(pet.id)
-        self.repository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
+        self.vaccinationRepository.delete_applied_dewormings(pet.id)
+        self.vaccinationRepository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
