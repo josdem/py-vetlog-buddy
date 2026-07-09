@@ -118,6 +118,61 @@ def test_vaccination_cli():
         )
 
 
+def test_generate_stats():
+    """Test generate_stats command wiring"""
+    mock_session_cm = MagicMock()
+
+    with (
+        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
+        patch("vetlog_buddy.main.VaccinationRepository") as MockVaccinationRepository,
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccinationService,
+    ):
+        mock_session = MagicMock()
+        mock_session_cm.__enter__.return_value = mock_session
+        MockVaccinationService.return_value.get_rabies_vaccines_by_month.return_value = {
+            "01": 2,
+            "02": 0,
+        }
+
+        main.generate_stats(year=2026)
+
+        MockVaccinationRepository.assert_called_once_with(mock_session)
+        MockVaccinationService.assert_called_once_with(
+            MockVaccinationRepository.return_value
+        )
+        MockVaccinationService.return_value.get_rabies_vaccines_by_month.assert_called_once_with(
+            2026
+        )
+
+
+def test_stats_cli():
+    """Test stats CLI command wiring"""
+    mock_session_cm = MagicMock()
+
+    with (
+        patch("sys.argv", ["app.py", "--year", "2026"]),
+        patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
+        patch("vetlog_buddy.main.VaccinationRepository") as MockVaccinationRepository,
+        patch("vetlog_buddy.main.VaccinationService") as MockVaccinationService,
+    ):
+        mock_session = MagicMock()
+        mock_session_cm.__enter__.return_value = mock_session
+        MockVaccinationService.return_value.get_rabies_vaccines_by_month.return_value = {
+            "01": 2,
+            "02": 0,
+        }
+
+        main.stats_cli()
+
+        MockVaccinationRepository.assert_called_once_with(mock_session)
+        MockVaccinationService.assert_called_once_with(
+            MockVaccinationRepository.return_value
+        )
+        MockVaccinationService.return_value.get_rabies_vaccines_by_month.assert_called_once_with(
+            2026
+        )
+
+
 def test_pending_dewormings():
     """Test pending dewormings"""
     mock_session_cm = MagicMock()
