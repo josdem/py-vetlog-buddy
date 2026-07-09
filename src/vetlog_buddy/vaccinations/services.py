@@ -30,10 +30,10 @@ EXCLUDED_STATUSES = frozenset({"INACTIVE", "DECEASED"})
 class VaccinationService:
     def __init__(
         self,
-        vaccinationRepository: VaccinationRepository,
+        vaccination_repository: VaccinationRepository,
         pet_repository: PetRepository | None = None,
     ):
-        self.vaccinationRepository = vaccinationRepository
+        self.vaccination_repository = vaccination_repository
         self.pet_repository = pet_repository
         self.logger = Logger("VaccinationService")
 
@@ -69,17 +69,17 @@ class VaccinationService:
         vaccines = strategy.get_vaccines(weeks)
 
         for vaccine in vaccines:
-            if self.vaccinationRepository.find_pending_vaccination(pet.id, vaccine):
+            if self.vaccination_repository.find_pending_vaccination(pet.id, vaccine):
                 self.logger.info(
                     "Pet already has a pending %s vaccination, skipping", vaccine
                 )
                 break
             self.logger.info("Generating %s vaccination", vaccine)
-            self.vaccinationRepository.create(pet.id, vaccine, VaccineStatus.PENDING)
+            self.vaccination_repository.create(pet.id, vaccine, VaccineStatus.PENDING)
 
     def get_pending_dewormings(self, months: int):
         """Return pending dewormings"""
-        return self.vaccinationRepository.find_pending_dewormings(months)
+        return self.vaccination_repository.find_pending_dewormings(months)
 
     def get_rabies_vaccines_by_month(self, year: int) -> dict:
         """
@@ -87,19 +87,21 @@ class VaccinationService:
         Initializes all 12 months with 0 counts to ensure a complete dataset.
         """
         monthly_counts = {f"{i:02d}": 0 for i in range(1, 13)}
-        
-        results = self.vaccinationRepository.find_rabies_vaccines_by_month(year)
-        
+
+        results = self.vaccination_repository.find_rabies_vaccines_by_month(year)
+
         for date_obj in results:
             # Assuming date_obj is a datetime object or string. Adjust extraction if needed:
             date_str = str(date_obj)
             month = date_str.split("-")[1]
             if month in monthly_counts:
                 monthly_counts[month] += 1
-                
+
         return monthly_counts
 
     def create_deworming(self, pet: Pet):
         """Create a deworming record for a pet"""
-        self.vaccinationRepository.delete_applied_dewormings(pet.id)
-        self.vaccinationRepository.create(pet.id, VaccineType.DEWORMING, VaccineStatus.NEW)
+        self.vaccination_repository.delete_applied_dewormings(pet.id)
+        self.vaccination_repository.create(
+            pet.id, VaccineType.DEWORMING, VaccineStatus.NEW
+        )

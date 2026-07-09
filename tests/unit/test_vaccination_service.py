@@ -34,7 +34,9 @@ def mock_pet_repo():
 
 @pytest.fixture
 def service(mock_repo, mock_pet_repo):
-    return VaccinationService(vaccinationRepository=mock_repo, pet_repository=mock_pet_repo)
+    return VaccinationService(
+        vaccination_repository=mock_repo, pet_repository=mock_pet_repo
+    )
 
 
 def test_get_pending_dewormings(service, mock_repo):
