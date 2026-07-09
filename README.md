@@ -50,6 +50,9 @@ uv run vaccines --id {pet_id}
 
 # Create deworming records
 uv run dewormings
+
+# Display how many rabies vaccines we applied by month
+uv run stats --year {year}
 ```
 
 **Test**
