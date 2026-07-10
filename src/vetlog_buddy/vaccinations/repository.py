@@ -67,10 +67,10 @@ class VaccinationRepository:
 
         self.session.commit()
 
-    def find_rabies_vaccines_by_month(self, year: int) -> Sequence[datetime]:
+    def find_vaccines_by_month(self, year: int, vaccine: str) -> Sequence[datetime]:
         stmt = select(Vaccination.date).where(
             (Vaccination.status == VaccineStatus.APPLIED)
-            & (Vaccination.name == "Rabies")
+            & (Vaccination.name == vaccine)
             & (Vaccination.date.like(f"{year}-%"))
         )
         return self.session.exec(stmt).all()
