@@ -120,7 +120,7 @@ def stats_cli():
         "--year",
         type=int,
         required=True,
-        help="Year to generate rabies vaccination stats for",
+        help="Year to generate vaccination stats for",
     )
     parser.add_argument(
         "--vaccine",
