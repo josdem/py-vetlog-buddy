@@ -129,19 +129,19 @@ def test_generate_stats():
     ):
         mock_session = MagicMock()
         mock_session_cm.__enter__.return_value = mock_session
-        MockVaccinationService.return_value.get_rabies_vaccines_by_month.return_value = {
+        MockVaccinationService.return_value.get_vaccines_by_month.return_value = {
             "01": 2,
             "02": 0,
         }
 
-        main.generate_stats(year=2026)
+        main.generate_stats(year=2026, vaccine="Rabies")
 
         MockVaccinationRepository.assert_called_once_with(mock_session)
         MockVaccinationService.assert_called_once_with(
             MockVaccinationRepository.return_value
         )
-        MockVaccinationService.return_value.get_rabies_vaccines_by_month.assert_called_once_with(
-            2026
+        MockVaccinationService.return_value.get_vaccines_by_month.assert_called_once_with(
+            2026, "Rabies"
         )
 
 
@@ -150,14 +150,14 @@ def test_stats_cli():
     mock_session_cm = MagicMock()
 
     with (
-        patch("sys.argv", ["app.py", "--year", "2026"]),
+        patch("sys.argv", ["app.py", "--year", "2026", "--vaccine", "Rabies"]),
         patch("vetlog_buddy.main.get_session", return_value=mock_session_cm),
         patch("vetlog_buddy.main.VaccinationRepository") as MockVaccinationRepository,
         patch("vetlog_buddy.main.VaccinationService") as MockVaccinationService,
     ):
         mock_session = MagicMock()
         mock_session_cm.__enter__.return_value = mock_session
-        MockVaccinationService.return_value.get_rabies_vaccines_by_month.return_value = {
+        MockVaccinationService.return_value.get_vaccines_by_month.return_value = {
             "01": 2,
             "02": 0,
         }
@@ -168,8 +168,8 @@ def test_stats_cli():
         MockVaccinationService.assert_called_once_with(
             MockVaccinationRepository.return_value
         )
-        MockVaccinationService.return_value.get_rabies_vaccines_by_month.assert_called_once_with(
-            2026
+        MockVaccinationService.return_value.get_vaccines_by_month.assert_called_once_with(
+            2026, "Rabies"
         )
 
 

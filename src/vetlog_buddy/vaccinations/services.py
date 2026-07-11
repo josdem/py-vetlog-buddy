@@ -81,14 +81,14 @@ class VaccinationService:
         """Return pending dewormings"""
         return self.vaccination_repository.find_pending_dewormings(months)
 
-    def get_rabies_vaccines_by_month(self, year: int) -> dict:
+    def get_vaccines_by_month(self, year: int, vaccine: str) -> dict:
         """
-        Returns a dictionary with months as keys and the count of applied Rabies vaccines as values.
+        Returns a dictionary with months as keys and the count of applied vaccines as values.
         Initializes all 12 months with 0 counts to ensure a complete dataset.
         """
         monthly_counts = {f"{i:02d}": 0 for i in range(1, 13)}
 
-        results = self.vaccination_repository.find_rabies_vaccines_by_month(year)
+        results = self.vaccination_repository.find_vaccines_by_month(year, vaccine)
 
         for date_obj in results:
             # Assuming date_obj is a datetime object or string. Adjust extraction if needed:

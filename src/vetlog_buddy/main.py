@@ -102,28 +102,34 @@ def vaccinations_cli():
     vaccines(id=args.id)
 
 
-def generate_stats(year: int):
-    """Generate monthly rabies vaccination stats"""
+def generate_stats(year: int, vaccine: str):
+    """Generate monthly vaccination stats"""
     with get_session() as session:
         vacc_repo = VaccinationRepository(session)
         vacc_service = VaccinationService(vacc_repo)
-        stats = vacc_service.get_rabies_vaccines_by_month(year)
+        stats = vacc_service.get_vaccines_by_month(year, vaccine)
         for month, count in stats.items():
-            logger.info("Month %s: %d rabies vaccines applied", month, count)
+            logger.info("Month %s: %d %s vaccines applied", month, count, vaccine)
         return stats
 
 
 def stats_cli():
-    """CLI entry point for generating rabies vaccination stats"""
+    """CLI entry point for generating vaccination stats"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--year",
         type=int,
         required=True,
-        help="Year to generate rabies vaccination stats for",
+        help="Year to generate vaccination stats for",
+    )
+    parser.add_argument(
+        "--vaccine",
+        type=str,
+        required=True,
+        help="Vaccine type to generate stats for (e.g., 'Rabies')",
     )
     args = parser.parse_args()
-    generate_stats(year=args.year)
+    generate_stats(year=args.year, vaccine=args.vaccine)
 
 
 def version_check():
