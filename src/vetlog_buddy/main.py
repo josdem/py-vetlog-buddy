@@ -84,6 +84,9 @@ def dewormings():
         for deworming in required_dewormings:
             pet = pet_service.get_by_id(deworming.pet_id)
             if pet is None or pet.status in EXCLUDED_STATUSES:
+                logger.info(
+                    f"Pet {pet.name} (ID: {pet.id}) is not eligible for deworming"
+                )
                 continue
             vacc_service.create_deworming(pet)
             logger.info(f"Pet {pet.name} (ID: {pet.id}) needs deworming")
