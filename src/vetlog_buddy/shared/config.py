@@ -13,28 +13,20 @@
 #  limitations under the License
 
 from functools import lru_cache
-from pydantic import field_validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    db_host: str
-    db_name: str
-    db_user: str
-    db_password: str
-    factor: float = 0.5
+    DB_HOST: str
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: str
+    FACTOR: float
 
-    @field_validator("factor", mode="before")
-    @classmethod
-    def empty_str_to_float(cls, v):
-        if v == "":
-            return 0.5
-        return v
-
-    class Config:
-        # Reads .env from project root
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
 
 
 @lru_cache

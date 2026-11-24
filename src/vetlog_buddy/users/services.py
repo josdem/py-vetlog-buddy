@@ -1,12 +1,14 @@
 from vetlog_buddy.users.repository import UserRepository
 from vetlog_buddy.users.model import User
 from vetlog_buddy.shared.logger import Logger
+from vetlog_buddy.shared.config import get_settings
 
 
 class UserService:
-    def __init__(self, repo: UserRepository, factor: float = 0.5) -> None:
+    def __init__(self, repo: UserRepository) -> None:
+        settings = get_settings()
+        self.factor = settings.FACTOR
         self.repo = repo
-        self.factor = factor
         self.logger = Logger("UserService")
 
     def is_invalid(self, user) -> bool:

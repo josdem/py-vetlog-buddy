@@ -22,7 +22,7 @@ from vetlog_buddy.shared.config import get_settings
 @lru_cache
 def get_database_url() -> str:
     settings = get_settings()
-    return f"mysql+mysqlconnector://{quote_plus(settings.db_user)}:{quote_plus(settings.db_password)}@{settings.db_host}/{settings.db_name}"
+    return f"mysql+mysqlconnector://{quote_plus(settings.DB_USER)}:{quote_plus(settings.DB_PASSWORD)}@{settings.DB_HOST}/{settings.DB_NAME}"
 
 
 @lru_cache

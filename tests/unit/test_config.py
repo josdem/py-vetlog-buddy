@@ -16,6 +16,7 @@ def mock_env_vars():
             "DB_NAME": "vetlog",
             "DB_USER": "vetlogUser",
             "DB_PASSWORD": "vetlogDB",
+            "FACTOR": "0.5",
         },
     ):
         yield
@@ -23,10 +24,11 @@ def mock_env_vars():
 
 def test_settings_loads_from_env(mock_env_vars):
     settings = Settings()
-    assert settings.db_host == "localhost"
-    assert settings.db_name == "vetlog"
-    assert settings.db_user == "vetlogUser"
-    assert settings.db_password == "vetlogDB"
+    assert settings.DB_HOST == "localhost"
+    assert settings.DB_NAME == "vetlog"
+    assert settings.DB_USER == "vetlogUser"
+    assert settings.DB_PASSWORD == "vetlogDB"
+    assert settings.FACTOR == 0.5
 
 
 @pytest.fixture

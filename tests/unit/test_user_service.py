@@ -12,13 +12,31 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License
 
-from unittest.mock import MagicMock
+import os
+from unittest.mock import MagicMock, patch
 
+from pydantic import ValidationError
 import pytest
 
+from vetlog_buddy.shared.config import Settings
 from vetlog_buddy.users.model import User
 from vetlog_buddy.users.repository import UserRepository
 from vetlog_buddy.users.services import UserService
+
+
+@pytest.fixture
+def mock_env_vars():
+    with patch.dict(
+        os.environ,
+        {
+            "DB_HOST": "localhost",
+            "DB_NAME": "vetlog",
+            "DB_USER": "vetlogUser",
+            "DB_PASSWORD": "vetlogDB",
+            "FACTOR": "0.5",
+        },
+    ):
+        yield
 
 
 class DummyRepo(UserRepository):
@@ -47,7 +65,7 @@ Linters seem to prefer tuple format
         ("simonhodgson3237@icloud.com", False),
     ],
 )
-def test_is_suspicious(username, expected):
+def test_is_suspicious(username, expected, mock_env_vars):
     """Confirm UserService marks usernames correctly as suspicious"""
     # usernames from test_suspicious_username.py
     service = UserService(repo=DummyRepo())
@@ -142,3 +160,14 @@ def test_list_suspicious_logs_each_user_and_total():
         0.4,
     )
     service.logger.info.assert_any_call("Found %d suspicious users", 1)
+
+
+@pytest.fixture
+def clean_env():
+    with patch.dict(os.environ, {}, clear=True):
+        yield
+
+
+def test_settings_missing_required_vars(clean_env):
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)
